@@ -6,22 +6,16 @@ import (
 	"github.com/vine-io/apimachinery/schema"
 )
 
-var gs = NewObjectSet()
+var DefaultSet ObjectSet = NewSet()
 
-type Creater func(in Object) Object
-
-var DefaultCreater Creater = func(in Object) Object {
-	return in
-}
-
-type ObjectSet struct {
+type SimpleObjectSet struct {
 	sync.RWMutex
 
 	store map[string]Object
 }
 
 // NewObj creates a new Object, trigger OnCreate function
-func (s *ObjectSet) NewObj(gvk string, fn Creater) (Object, bool) {
+func (s *SimpleObjectSet) NewObj(gvk string, fn Creater) (Object, bool) {
 	s.RLock()
 	defer s.RUnlock()
 	out, ok := s.store[gvk]
@@ -38,7 +32,7 @@ func (s *ObjectSet) NewObj(gvk string, fn Creater) (Object, bool) {
 }
 
 // NewObjWithGVK creates a new Object, trigger OnCreate function
-func (s *ObjectSet) NewObjWithGVK(gvk *schema.GroupVersionKind, fn Creater) (Object, bool) {
+func (s *SimpleObjectSet) NewObjWithGVK(gvk *schema.GroupVersionKind, fn Creater) (Object, bool) {
 	s.RLock()
 	defer s.RUnlock()
 	out, ok := s.store[gvk.String()]
@@ -54,7 +48,7 @@ func (s *ObjectSet) NewObjWithGVK(gvk *schema.GroupVersionKind, fn Creater) (Obj
 	return fn(out), true
 }
 
-func (s *ObjectSet) IsExists(gvk *schema.GroupVersionKind) bool {
+func (s *SimpleObjectSet) IsExists(gvk *schema.GroupVersionKind) bool {
 	s.RLock()
 	defer s.RUnlock()
 	_, ok := s.store[gvk.String()]
@@ -62,7 +56,7 @@ func (s *ObjectSet) IsExists(gvk *schema.GroupVersionKind) bool {
 }
 
 // Get gets Object by schema.GroupVersionKind
-func (s *ObjectSet) Get(gvk *schema.GroupVersionKind) (Object, bool) {
+func (s *SimpleObjectSet) Get(gvk *schema.GroupVersionKind) (Object, bool) {
 	s.RLock()
 	defer s.RUnlock()
 	out, ok := s.store[gvk.String()]
@@ -73,7 +67,7 @@ func (s *ObjectSet) Get(gvk *schema.GroupVersionKind) (Object, bool) {
 }
 
 // AddObj push entities to Set
-func (s *ObjectSet) AddObj(v ...Object) {
+func (s *SimpleObjectSet) AddObj(v ...Object) {
 	s.Lock()
 	for _, in := range v {
 		gvk := in.GetObjectKind().GroupVersionKind()
@@ -84,20 +78,20 @@ func (s *ObjectSet) AddObj(v ...Object) {
 
 // NewObj creates a new Object, trigger OnCreate function
 func NewObj(gvk string, fn Creater) (Object, bool) {
-	return gs.NewObj(gvk, fn)
+	return DefaultSet.NewObj(gvk, fn)
 }
 
 // NewObjWithGVK creates a new Object, trigger OnCreate function
 func NewObjWithGVK(gvk *schema.GroupVersionKind, fn Creater) (Object, bool) {
-	return gs.NewObjWithGVK(gvk, fn)
+	return DefaultSet.NewObjWithGVK(gvk, fn)
 }
 
 func AddObj(vs ...Object) {
-	gs.AddObj(vs...)
+	DefaultSet.AddObj(vs...)
 }
 
-func NewObjectSet() *ObjectSet {
-	return &ObjectSet{
+func NewSet() *SimpleObjectSet {
+	return &SimpleObjectSet{
 		store: map[string]Object{},
 	}
 }

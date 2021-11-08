@@ -4,9 +4,12 @@ import (
 	"context"
 
 	"github.com/vine-io/apimachinery/runtime"
+	"github.com/vine-io/apimachinery/schema"
 	"github.com/vine-io/vine/lib/dao"
 	"github.com/vine-io/vine/lib/dao/clause"
 )
+
+type RepoCreator func(object runtime.Object) Repo
 
 type Repo interface {
 	FindPage(ctx context.Context, page, size int32) ([]runtime.Object, int64, error)
@@ -22,4 +25,10 @@ type Repo interface {
 	BatchDelete(ctx context.Context, soft bool) error
 	Delete(ctx context.Context, soft bool) error
 	Tx(ctx context.Context) *dao.DB
+}
+
+type RepoSet interface {
+	RegisterRepo(g *schema.GroupVersionKind, fn RepoCreator)
+	NewRepo(in runtime.Object) (Repo, bool)
+	IsExits(gvk *schema.GroupVersionKind) bool
 }

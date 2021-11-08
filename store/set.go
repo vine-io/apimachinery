@@ -7,23 +7,21 @@ import (
 	"github.com/vine-io/apimachinery/schema"
 )
 
-var pset = NewRepoSet()
+var DefaultSet RepoSet = NewSimpleRepoSet()
 
-type RepoCreator func(object runtime.Object) Repo
-
-type RepoSet struct {
+type SimpleRepoSet struct {
 	sync.RWMutex
 
 	sets map[string]RepoCreator
 }
 
-func (s *RepoSet) RegisterRepo(g *schema.GroupVersionKind, fn RepoCreator) {
+func (s *SimpleRepoSet) RegisterRepo(g *schema.GroupVersionKind, fn RepoCreator) {
 	s.Lock()
 	s.sets[g.String()] = fn
 	s.Unlock()
 }
 
-func (s *RepoSet) NewRepo(in runtime.Object) (Repo, bool) {
+func (s *SimpleRepoSet) NewRepo(in runtime.Object) (Repo, bool) {
 	s.RLock()
 	defer s.RUnlock()
 	gvk := in.GetObjectKind().GroupVersionKind()
@@ -34,21 +32,21 @@ func (s *RepoSet) NewRepo(in runtime.Object) (Repo, bool) {
 	return fn(in), true
 }
 
-func (s *RepoSet) IsExits(gvk *schema.GroupVersionKind) bool {
+func (s *SimpleRepoSet) IsExits(gvk *schema.GroupVersionKind) bool {
 	s.RLock()
 	_, ok := s.sets[gvk.String()]
 	s.RUnlock()
 	return ok
 }
 
-func NewRepoSet() *RepoSet {
-	return &RepoSet{sets: map[string]RepoCreator{}}
+func NewSimpleRepoSet() *SimpleRepoSet {
+	return &SimpleRepoSet{sets: map[string]RepoCreator{}}
 }
 
 func RegisterRepo(g *schema.GroupVersionKind, fn RepoCreator) {
-	pset.RegisterRepo(g, fn)
+	DefaultSet.RegisterRepo(g, fn)
 }
 
 func NewRepo(in runtime.Object) (Repo, bool) {
-	return pset.NewRepo(in)
+	return DefaultSet.NewRepo(in)
 }

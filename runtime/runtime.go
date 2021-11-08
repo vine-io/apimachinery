@@ -13,3 +13,21 @@ type Object interface {
 	DeepCopyObject() Object
 	DeepCopyFrom(Object)
 }
+
+type Creater func(in Object) Object
+
+var DefaultCreater Creater = func(in Object) Object {
+	return in
+}
+
+type ObjectSet interface {
+	NewObj(gvk string, fn Creater) (Object, bool)
+
+	NewObjWithGVK(gvk *schema.GroupVersionKind, fn Creater) (Object, bool)
+
+	IsExists(gvk *schema.GroupVersionKind) bool
+
+	Get(gvk *schema.GroupVersionKind) (Object, bool)
+
+	AddObj(v ...Object)
+}
