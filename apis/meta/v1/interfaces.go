@@ -109,6 +109,10 @@ func (m *ObjectMeta) SetReferences(references []*OwnerReference) {
 
 var _ schema.ObjectKind = (*TypeMeta)(nil)
 
+func (m *TypeMeta) GetObjectKind() schema.ObjectKind {
+	return m
+}
+
 func (m *TypeMeta) SetGroupVersionKind(gvk schema.GroupVersionKind) {
 	m.ApiVersion = gvk.APIGroup()
 	m.Kind = gvk.Kind

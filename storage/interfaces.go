@@ -1,4 +1,4 @@
-package store
+package storage
 
 import (
 	"context"
@@ -9,16 +9,16 @@ import (
 	"github.com/vine-io/vine/lib/dao/clause"
 )
 
-type RepoCreator func(object runtime.Object) Repo
-
-type Repo interface {
+type Storage interface {
+	AutoMigrate() error
+	Load(object runtime.Object) error
 	FindPage(ctx context.Context, page, size int32) ([]runtime.Object, int64, error)
 	FindAll(ctx context.Context) ([]runtime.Object, error)
 	FindPureAll(ctx context.Context) ([]runtime.Object, error)
 	Count(ctx context.Context) (total int64, err error)
 	FindOne(ctx context.Context) (runtime.Object, error)
 	FindPureOne(ctx context.Context) (runtime.Object, error)
-	Cond(exprs ...clause.Expression) Repo
+	Cond(exprs ...clause.Expression) Storage
 	Create(ctx context.Context) (runtime.Object, error)
 	BatchUpdates(ctx context.Context) error
 	Updates(ctx context.Context) (runtime.Object, error)
@@ -27,8 +27,13 @@ type Repo interface {
 	Tx(ctx context.Context) *dao.DB
 }
 
-type RepoSet interface {
-	RegisterRepo(g *schema.GroupVersionKind, fn RepoCreator)
-	NewRepo(in runtime.Object) (Repo, bool)
-	IsExits(gvk *schema.GroupVersionKind) bool
+type Factory interface {
+	// AddKnownStorage registers Storage
+	AddKnownStorage(gvk schema.GroupVersionKind, storage Storage) error
+
+	// NewStorage get a Storage by runtime.Object
+	NewStorage(in runtime.Object) (Storage, error)
+
+	// IsExists checks Storage exists
+	IsExists(gvk schema.GroupVersionKind) bool
 }

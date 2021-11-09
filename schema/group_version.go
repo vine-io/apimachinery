@@ -2,6 +2,7 @@ package schema
 
 import (
 	"fmt"
+	"reflect"
 	"strings"
 )
 
@@ -47,14 +48,14 @@ func (gvk GroupVersionKind) GroupVersion() GroupVersion {
 	return GroupVersion{Group: gvk.Group, Version: gvk.Version}
 }
 
-func (gvk *GroupVersionKind) APIGroup() string {
+func (gvk GroupVersionKind) APIGroup() string {
 	if gvk.Group == "" {
 		return gvk.Version
 	}
 	return gvk.Group + "/" + gvk.Version
 }
 
-func (gvk *GroupVersionKind) String() string {
+func (gvk GroupVersionKind) String() string {
 	var s string
 	if gvk.Group != "" {
 		s = gvk.Group + "/"
@@ -65,8 +66,8 @@ func (gvk *GroupVersionKind) String() string {
 	return s + gvk.Kind
 }
 
-func FromGVK(s string) *GroupVersionKind {
-	gvk := &GroupVersionKind{}
+func FromGVK(s string) GroupVersionKind {
+	gvk := GroupVersionKind{}
 	if idx := strings.Index(s, "/"); idx != -1 {
 		gvk.Group = s[:idx]
 		s = s[idx+1:]
@@ -124,4 +125,9 @@ func ParseGroupVersion(gv string) (GroupVersion, error) {
 // WithKind creates a GroupVersionKind based on the method receiver's GroupVersion and the passed Kind.
 func (gv GroupVersion) WithKind(kind string) GroupVersionKind {
 	return GroupVersionKind{Group: gv.Group, Version: gv.Version, Kind: kind}
+}
+
+// WithTypeKind creates a GroupVersionKind based on the method receiver's GroupVersion and the passed reflect.Type.
+func (gv GroupVersion) WithTypeKind(t reflect.Type) GroupVersionKind {
+	return GroupVersionKind{Group: gv.Group, Version: gv.Version, Kind: t.Name()}
 }

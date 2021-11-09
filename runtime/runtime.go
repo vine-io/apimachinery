@@ -10,24 +10,25 @@ import (
 // to return a no-op ObjectKindAccessor in cases where it is not expected to be serialized.
 type Object interface {
 	GetObjectKind() schema.ObjectKind
-	DeepCopyObject() Object
-	DeepCopyFrom(Object)
+	DeepCopy() Object
+	DeepFrom(Object)
 }
 
-type Creater func(in Object) Object
+type DefaultFunc func(src Object)
 
-var DefaultCreater Creater = func(in Object) Object {
-	return in
-}
+type Scheme interface {
+	// New creates a new object
+	New(gvk schema.GroupVersionKind) (Object, error)
 
-type ObjectSet interface {
-	NewObj(gvk string, fn Creater) (Object, bool)
+	// IsExists checks whether the object exists
+	IsExists(gvk schema.GroupVersionKind) bool
 
-	NewObjWithGVK(gvk *schema.GroupVersionKind, fn Creater) (Object, bool)
+	// AddKnownTypes adds Objects to Machinery
+	AddKnownTypes(gv schema.GroupVersion, types ...Object) error
 
-	IsExists(gvk *schema.GroupVersionKind) bool
+	// Default calls the DefaultFunc to src
+	Default(src Object) error
 
-	Get(gvk *schema.GroupVersionKind) (Object, bool)
-
-	AddObj(v ...Object)
+	// AddTypeDefaultingFunc adds DefaultFunc to Machinery
+	AddTypeDefaultingFunc(srcType Object, fn DefaultFunc)
 }
