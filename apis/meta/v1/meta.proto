@@ -3,8 +3,8 @@ syntax = "proto3";
 package metav1;
 
 option go_package = "github.com/vine-io/apimachinery/apis/meta/v1;metav1";
-option java_multiple_files = true;
 option java_package = "io.vine.apimachinery.apis.meta.v1";
+option java_multiple_files = true;
 
 message TypeMeta {
   // 资源类型
@@ -19,7 +19,8 @@ message ObjectMeta {
   string name = 1;
 
   // +gen:pk
-  string uuid = 2;
+  // 资源 id
+  string uid = 2;
 
   // 资源版本信息
   int64 resourceVersion = 4;

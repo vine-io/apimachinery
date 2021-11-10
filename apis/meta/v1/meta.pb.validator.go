@@ -22,7 +22,7 @@ func (m *ObjectMeta) Validate() error {
 
 func (m *ObjectMeta) ValidateE(prefix string) error {
 	errs := make([]error, 0)
-	if len(m.Uuid) != 0 {
+	if len(m.Uid) != 0 {
 	}
 	return is.MargeErr(errs...)
 }

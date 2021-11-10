@@ -1,3 +1,25 @@
+// MIT License
+//
+// Copyright (c) 2021 Lack
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+
 package metav1
 
 import "github.com/vine-io/apimachinery/schema"
@@ -7,6 +29,8 @@ var _ Meta = (*ObjectMeta)(nil)
 type Meta interface {
 	GetName() string
 	SetName(name string)
+	GetUID() string
+	SetUID(uid string)
 	GetResourceVersion() int64
 	SetResourceVersion(rv int64)
 	GetNamespace() string
@@ -33,6 +57,14 @@ func (m *ObjectMeta) GetName() string {
 
 func (m *ObjectMeta) SetName(name string) {
 	m.Name = name
+}
+
+func (m *ObjectMeta) GetUID() string {
+	return m.Uid
+}
+
+func (m *ObjectMeta) SetUID(uid string) {
+	m.Uid = uid
 }
 
 func (m *ObjectMeta) GetResourceVersion() int64 {
@@ -119,5 +151,5 @@ func (m *TypeMeta) SetGroupVersionKind(gvk schema.GroupVersionKind) {
 }
 
 func (m *TypeMeta) GroupVersionKind() schema.GroupVersionKind {
-	return *schema.FromGVK(m.ApiVersion + "." + m.Kind)
+	return schema.FromGVK(m.ApiVersion + "." + m.Kind)
 }
