@@ -1,8 +1,13 @@
+PACKAGE=github.com/vine-io/apimachinery
 
 all: release
 
 vendor:
 	go mod vendor
+
+proto:
+	cd $(GOPATH)/src && \
+	protoc -I=$(GOPATH)/src --gogo_out=:. --validator_out=:. --deepcopy_out=:. $(PACKAGE)/apis/meta/v1/meta.proto
 
 release:
 ifeq "$(TAG)" ""

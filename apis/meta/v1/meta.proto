@@ -23,7 +23,10 @@ message ObjectMeta {
   string uid = 2;
 
   // 资源版本信息
-  int64 resourceVersion = 4;
+  int64 resourceVersion = 3;
+
+  // 资源描述信息
+  string description = 4;
 
   // 资源命名空间
   string namespace = 5;
