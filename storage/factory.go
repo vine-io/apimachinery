@@ -67,6 +67,11 @@ func (s *simpleStorageFactory) NewStorage(in runtime.Object) (Storage, error) {
 
 	storage := reflect.New(rt).Interface().(Storage)
 
+	err := storage.Load(in)
+	if err != nil {
+		return nil, fmt.Errorf("load object: %v", err)
+	}
+
 	return storage, nil
 }
 
