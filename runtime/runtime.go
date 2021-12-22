@@ -36,7 +36,7 @@ type Object interface {
 	DeepFrom(Object)
 }
 
-type DefaultFunc func(src Object) Object
+type DefaultFunc func(src Object, gvk schema.GroupVersionKind) Object
 
 type Scheme interface {
 	// New creates a new object
