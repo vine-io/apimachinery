@@ -23,7 +23,6 @@
 package runtime
 
 import (
-	"fmt"
 	"reflect"
 
 	"github.com/vine-io/apimachinery/schema"
@@ -38,10 +37,12 @@ type SimpleScheme struct {
 
 	defaultFuncs map[reflect.Type]DefaultFunc
 
+	gFn DefaultFunc
+
 	observedVersions []schema.GroupVersion
 }
 
-// New creates a new Object
+// New creates a new Object, and call global DefaultFunc
 func (s *SimpleScheme) New(gvk schema.GroupVersionKind) (Object, error) {
 	rv, exists := s.gvkToTypes[gvk]
 	if !exists {
@@ -49,6 +50,9 @@ func (s *SimpleScheme) New(gvk schema.GroupVersionKind) (Object, error) {
 	}
 
 	out := reflect.New(rv).Interface().(Object)
+	out.GetObjectKind().SetGroupVersionKind(gvk)
+
+	out = s.gFn(out)
 
 	return out, nil
 }
@@ -74,18 +78,31 @@ func (s *SimpleScheme) AddKnownTypes(gv schema.GroupVersion, types ...Object) er
 	return nil
 }
 
-func (s *SimpleScheme) Default(src Object) error {
+// Default call global DefaultFunc specifies DefaultFunc
+func (s *SimpleScheme) Default(src Object) Object {
 	rt := reflect.TypeOf(src)
-	fn, exists := s.defaultFuncs[rt]
-	if !exists {
-		return fmt.Errorf("%w: not found %v", ErrUnknownType, src.GetObjectKind().GroupVersionKind())
+	if src.GetObjectKind().GroupVersionKind().Empty() {
+		gvk, ok := s.typesToGvk[rt]
+		if ok {
+			src.GetObjectKind().SetGroupVersionKind(gvk)
+		}
 	}
-	fn(src)
-	return nil
+
+	src = s.gFn(src)
+
+	fn, exists := s.defaultFuncs[rt]
+	if exists {
+		src = fn(src)
+	}
+	return src
 }
 
 func (s *SimpleScheme) AddTypeDefaultingFunc(srcType Object, fn DefaultFunc) {
 	s.defaultFuncs[reflect.TypeOf(srcType)] = fn
+}
+
+func (s *SimpleScheme) AddGlobalDefaultingFunc(fn DefaultFunc) {
+	s.gFn = fn
 }
 
 func (s *SimpleScheme) addObservedVersion(gv schema.GroupVersion) {
@@ -127,8 +144,13 @@ func AddKnownTypes(gv schema.GroupVersion, types ...Object) error {
 }
 
 // DefaultObject calls DefaultScheme.Default()
-func DefaultObject(src Object) error {
+func DefaultObject(src Object) Object {
 	return DefaultScheme.Default(src)
+}
+
+// AddGlobalDefaultingFunc calls DefaultScheme.AddTypeDefaultingFunc()
+func AddGlobalDefaultingFunc(fn DefaultFunc) {
+	DefaultScheme.AddGlobalDefaultingFunc(fn)
 }
 
 // AddTypeDefaultingFunc calls DefaultScheme.AddTypeDefaultingFunc()

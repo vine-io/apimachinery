@@ -36,7 +36,7 @@ type Object interface {
 	DeepFrom(Object)
 }
 
-type DefaultFunc func(src Object)
+type DefaultFunc func(src Object) Object
 
 type Scheme interface {
 	// New creates a new object
@@ -49,7 +49,10 @@ type Scheme interface {
 	AddKnownTypes(gv schema.GroupVersion, types ...Object) error
 
 	// Default calls the DefaultFunc to src
-	Default(src Object) error
+	Default(src Object) Object
+
+	// AddGlobalDefaultingFunc adds global DefaultFunc to Machinery
+	AddGlobalDefaultingFunc(fn DefaultFunc)
 
 	// AddTypeDefaultingFunc adds DefaultFunc to Machinery
 	AddTypeDefaultingFunc(srcType Object, fn DefaultFunc)
