@@ -52,7 +52,9 @@ func (s *SimpleScheme) New(gvk schema.GroupVersionKind) (Object, error) {
 	out := reflect.New(rv).Interface().(Object)
 	out.GetObjectKind().SetGroupVersionKind(gvk)
 
-	out = s.gFn(out, gvk)
+	if s.gFn != nil {
+		out = s.gFn(out, gvk)
+	}
 
 	return out, nil
 }
@@ -70,6 +72,7 @@ func (s *SimpleScheme) AddKnownTypes(gv schema.GroupVersion, types ...Object) er
 		if rt.Kind() != reflect.Ptr {
 			return ErrIsNotPointer
 		}
+		rt = rt.Elem()
 		gvk := gv.WithKind(rt.Name())
 		s.gvkToTypes[gvk] = rt
 		s.typesToGvk[rt] = gvk
@@ -81,13 +84,18 @@ func (s *SimpleScheme) AddKnownTypes(gv schema.GroupVersion, types ...Object) er
 // Default call global DefaultFunc specifies DefaultFunc
 func (s *SimpleScheme) Default(src Object) Object {
 	rt := reflect.TypeOf(src)
+	if rt.Kind() == reflect.Ptr {
+		rt = rt.Elem()
+	}
 
 	gvk := s.typesToGvk[rt]
 	if src.GetObjectKind().GroupVersionKind().Empty() {
 		src.GetObjectKind().SetGroupVersionKind(gvk)
 	}
 
-	src = s.gFn(src, gvk)
+	if s.gFn != nil {
+		src = s.gFn(src, gvk)
+	}
 
 	fn, exists := s.defaultFuncs[rt]
 	if exists {
