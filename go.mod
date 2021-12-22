@@ -4,11 +4,11 @@ go 1.17
 
 require (
 	github.com/evanphx/json-patch/v5 v5.2.0
-	github.com/gin-gonic/gin v1.7.4
+	github.com/gin-gonic/gin v1.7.7
 	github.com/gogo/protobuf v1.3.2
 	github.com/json-iterator/go v1.1.11
 	github.com/oxtoacart/bpool v0.0.0-20190530202638-03653db5a59c
-	github.com/vine-io/vine v1.4.2-beta
+	github.com/vine-io/vine v1.4.3
 	go.uber.org/atomic v1.9.0
 	golang.org/x/net v0.0.0-20210405180319-a5a99cb37ef4
 	google.golang.org/grpc v1.38.0
