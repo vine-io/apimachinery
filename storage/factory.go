@@ -48,6 +48,7 @@ func (s *simpleStorageFactory) AddKnownStorage(gvk schema.GroupVersionKind, stor
 	if rt.Kind() != reflect.Ptr {
 		return ErrStorageIsNotPointer
 	}
+	rt = rt.Elem()
 
 	s.gvkToType[gvk] = rt
 
