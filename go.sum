@@ -165,6 +165,8 @@ github.com/valyala/tcplisten v0.0.0-20161114210144-ceec8f93295a/go.mod h1:v3UYOV
 github.com/vine-io/cli v1.3.0/go.mod h1:qcr7du65tNdEwzcxvGPn9Gn/RKP/mvIFaYdw6x/Z/R4=
 github.com/vine-io/gscheduler v0.3.0 h1:eAd+1Uzdh99WsnApWYwVR8MmUSFLNn3mSVXS2vhF/Jg=
 github.com/vine-io/gscheduler v0.3.0/go.mod h1:Aaq3G56fS4yPLRQRienH3F1yGfStEPrAVLr1os60ZI8=
+github.com/vine-io/pkg/inject v0.1.0 h1:m6j63ILzdxi+uTmpYi0xzo2EtQocvC+4DtKuPx41B7Y=
+github.com/vine-io/pkg/inject v0.1.0/go.mod h1:p4DMHbFeMWJtPQCRvLI6A4xEjA0BLbuum1gAORZp9oI=
 github.com/vine-io/vine v1.3.6 h1:fpi5kG4jwHwDEFOAcQ9DyCkp6Wsn+gbJigcK6rmbzF8=
 github.com/vine-io/vine v1.3.6/go.mod h1:CmEAsMZzEzaufm3Z5lbjvaQbkBUJDNai9QYEQnGKpNc=
 github.com/vine-io/vine v1.4.1 h1:lI94YCGJhO/IOraSkan5q59WB81466CkPMn7DTNNQts=
