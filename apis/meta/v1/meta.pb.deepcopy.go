@@ -3,6 +3,8 @@
 
 package metav1
 
+import ()
+
 // DeepCopyInto is an auto-generated deepcopy function, coping the receiver, writing into out. in must be no-nil.
 func (in *TypeMeta) DeepCopyInto(out *TypeMeta) {
 	*out = *in
@@ -40,5 +42,10 @@ func (in *ObjectMeta) DeepCopyInto(out *ObjectMeta) {
 
 // DeepCopyInto is an auto-generated deepcopy function, coping the receiver, writing into out. in must be no-nil.
 func (in *OwnerReference) DeepCopyInto(out *OwnerReference) {
+	*out = *in
+}
+
+// DeepCopyInto is an auto-generated deepcopy function, coping the receiver, writing into out. in must be no-nil.
+func (in *State) DeepCopyInto(out *State) {
 	*out = *in
 }
