@@ -1,6 +1,10 @@
 package server
 
-import "github.com/vine-io/vine/core/server"
+import (
+	"context"
+
+	"github.com/vine-io/vine/core/server"
+)
 
 // Service the implementation of vine service
 type Service interface {
@@ -9,6 +13,6 @@ type Service interface {
 
 // BizImpl the implementation of business service
 type BizImpl interface {
-	Init() error
+	Init(ctx context.Context) error
 	Start() error
 }
