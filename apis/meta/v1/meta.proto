@@ -66,10 +66,11 @@ message OwnerReference {
 }
 
 enum StateCode {
+    Unknown = 0;
     // 资源可用
-    Ready = 0;
+    Ready = 1;
     // 资源不可用
-    NotReady = 1;
+    NotReady = 2;
 }
 
 // 资源状态
