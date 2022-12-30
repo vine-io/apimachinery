@@ -27,7 +27,7 @@ import (
 	"time"
 
 	"github.com/vine-io/apimachinery/runtime"
-	"github.com/vine-io/vine/core/registry"
+	pb "github.com/vine-io/vine/lib/api/handler/openapi/proto"
 )
 
 var (
@@ -60,16 +60,15 @@ type Rest interface {
 //
 // Example:
 //
-//		type Greeter struct{}
+//	type Greeter struct{}
 //
-//		func (g *Greeter) Hello(context, request, response) error {
-//			return nil
-//		}
-//
+//	func (g *Greeter) Hello(context, request, response) error {
+//		return nil
+//	}
 type Handler interface {
 	Name() string
 	Handler() interface{}
-	Endpoints() []*registry.OpenAPIPath
+	Endpoints() []*pb.OpenAPIPath
 	Options() HandlerOptions
 }
 

@@ -1,6 +1,18 @@
+# github.com/BurntSushi/toml v0.3.1
+## explicit
+github.com/BurntSushi/toml
+# github.com/bitly/go-simplejson v0.5.0
+## explicit
+github.com/bitly/go-simplejson
+# github.com/cpuguy83/go-md2man/v2 v2.0.0
+## explicit; go 1.12
+github.com/cpuguy83/go-md2man/v2/md2man
 # github.com/evanphx/json-patch/v5 v5.2.0
 ## explicit; go 1.12
 github.com/evanphx/json-patch/v5
+# github.com/fsnotify/fsnotify v1.4.9
+## explicit; go 1.13
+github.com/fsnotify/fsnotify
 # github.com/gin-contrib/sse v0.1.0
 ## explicit; go 1.12
 github.com/gin-contrib/sse
@@ -24,6 +36,8 @@ github.com/go-playground/validator/v10
 # github.com/gogo/protobuf v1.3.2
 ## explicit; go 1.15
 github.com/gogo/protobuf/proto
+github.com/gogo/protobuf/sortkeys
+github.com/gogo/protobuf/types
 # github.com/golang/protobuf v1.5.2
 ## explicit; go 1.9
 github.com/golang/protobuf/jsonpb
@@ -35,6 +49,20 @@ github.com/golang/protobuf/ptypes/timestamp
 # github.com/google/uuid v1.2.0
 ## explicit
 github.com/google/uuid
+# github.com/hashicorp/hcl v1.0.0
+## explicit
+github.com/hashicorp/hcl
+github.com/hashicorp/hcl/hcl/ast
+github.com/hashicorp/hcl/hcl/parser
+github.com/hashicorp/hcl/hcl/scanner
+github.com/hashicorp/hcl/hcl/strconv
+github.com/hashicorp/hcl/hcl/token
+github.com/hashicorp/hcl/json/parser
+github.com/hashicorp/hcl/json/scanner
+github.com/hashicorp/hcl/json/token
+# github.com/imdario/mergo v0.3.11
+## explicit; go 1.13
+github.com/imdario/mergo
 # github.com/jinzhu/inflection v1.0.0
 ## explicit
 github.com/jinzhu/inflection
@@ -50,6 +78,9 @@ github.com/leodido/go-urn
 # github.com/mattn/go-isatty v0.0.12
 ## explicit; go 1.12
 github.com/mattn/go-isatty
+# github.com/miekg/dns v1.1.50
+## explicit; go 1.14
+github.com/miekg/dns
 # github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd
 ## explicit
 github.com/modern-go/concurrent
@@ -59,60 +90,147 @@ github.com/modern-go/reflect2
 # github.com/oxtoacart/bpool v0.0.0-20190530202638-03653db5a59c
 ## explicit; go 1.12
 github.com/oxtoacart/bpool
+# github.com/patrickmn/go-cache v2.1.0+incompatible
+## explicit
+github.com/patrickmn/go-cache
 # github.com/pkg/errors v0.9.1
 ## explicit
 github.com/pkg/errors
+# github.com/russross/blackfriday/v2 v2.0.1
+## explicit
+github.com/russross/blackfriday/v2
+# github.com/shurcooL/sanitized_anchor_name v1.0.0
+## explicit
+github.com/shurcooL/sanitized_anchor_name
 # github.com/ugorji/go/codec v1.1.7
 ## explicit
 github.com/ugorji/go/codec
+# github.com/vine-io/cli v1.3.0
+## explicit; go 1.15
+github.com/vine-io/cli
 # github.com/vine-io/gscheduler v0.3.0
 ## explicit; go 1.16
+github.com/vine-io/gscheduler
 github.com/vine-io/gscheduler/cron
+github.com/vine-io/gscheduler/rbtree
 # github.com/vine-io/pkg/inject v0.1.0
 ## explicit; go 1.16
 github.com/vine-io/pkg/inject
-# github.com/vine-io/vine v1.4.13
-## explicit; go 1.15
+# github.com/vine-io/vine v1.4.14
+## explicit; go 1.17
+github.com/vine-io/vine
 github.com/vine-io/vine/core/broker
+github.com/vine-io/vine/core/broker/http
+github.com/vine-io/vine/core/broker/memory
+github.com/vine-io/vine/core/client
+github.com/vine-io/vine/core/client/grpc
+github.com/vine-io/vine/core/client/selector
+github.com/vine-io/vine/core/client/selector/dns
+github.com/vine-io/vine/core/client/selector/static
 github.com/vine-io/vine/core/codec
+github.com/vine-io/vine/core/codec/bytes
+github.com/vine-io/vine/core/codec/json
 github.com/vine-io/vine/core/registry
+github.com/vine-io/vine/core/registry/cache
+github.com/vine-io/vine/core/registry/mdns
+github.com/vine-io/vine/core/registry/memory
 github.com/vine-io/vine/core/server
+github.com/vine-io/vine/core/server/grpc
+github.com/vine-io/vine/lib/api
+github.com/vine-io/vine/lib/api/handler/openapi/proto
+github.com/vine-io/vine/lib/cache
+github.com/vine-io/vine/lib/cache/memory
+github.com/vine-io/vine/lib/cache/noop
+github.com/vine-io/vine/lib/cmd
+github.com/vine-io/vine/lib/config
+github.com/vine-io/vine/lib/config/encoder
+github.com/vine-io/vine/lib/config/encoder/hcl
+github.com/vine-io/vine/lib/config/encoder/json
+github.com/vine-io/vine/lib/config/encoder/toml
+github.com/vine-io/vine/lib/config/encoder/yaml
+github.com/vine-io/vine/lib/config/loader
+github.com/vine-io/vine/lib/config/loader/memory
+github.com/vine-io/vine/lib/config/memory
+github.com/vine-io/vine/lib/config/reader
+github.com/vine-io/vine/lib/config/reader/json
+github.com/vine-io/vine/lib/config/source
+github.com/vine-io/vine/lib/config/source/file
 github.com/vine-io/vine/lib/dao
 github.com/vine-io/vine/lib/dao/clause
 github.com/vine-io/vine/lib/dao/logger
+github.com/vine-io/vine/lib/dao/nop
 github.com/vine-io/vine/lib/dao/schema
 github.com/vine-io/vine/lib/dao/utils
+github.com/vine-io/vine/lib/errors
 github.com/vine-io/vine/lib/logger
 github.com/vine-io/vine/lib/logger/log
+github.com/vine-io/vine/lib/scheduler
+github.com/vine-io/vine/lib/trace
+github.com/vine-io/vine/lib/trace/memory
+github.com/vine-io/vine/util/addr
+github.com/vine-io/vine/util/backoff
+github.com/vine-io/vine/util/context/metadata
 github.com/vine-io/vine/util/is
+github.com/vine-io/vine/util/jsonpb
+github.com/vine-io/vine/util/mdns
+github.com/vine-io/vine/util/net
 github.com/vine-io/vine/util/qson
 github.com/vine-io/vine/util/ring
 github.com/vine-io/vine/util/signal
+github.com/vine-io/vine/util/tls
+github.com/vine-io/vine/util/wrapper
 # go.uber.org/atomic v1.9.0
 ## explicit; go 1.13
 go.uber.org/atomic
 # golang.org/x/crypto v0.0.0-20210921155107-089bfa567519
 ## explicit; go 1.17
 golang.org/x/crypto/sha3
+# golang.org/x/mod v0.6.0-dev.0.20220419223038-86c51ed26bb4
+## explicit; go 1.17
+golang.org/x/mod/semver
 # golang.org/x/net v0.4.0
 ## explicit; go 1.17
+golang.org/x/net/bpf
 golang.org/x/net/http/httpguts
 golang.org/x/net/http2
+golang.org/x/net/http2/h2c
 golang.org/x/net/http2/hpack
 golang.org/x/net/idna
+golang.org/x/net/internal/iana
+golang.org/x/net/internal/socket
 golang.org/x/net/internal/timeseries
+golang.org/x/net/ipv4
+golang.org/x/net/ipv6
 golang.org/x/net/netutil
 golang.org/x/net/trace
 # golang.org/x/sys v0.3.0
 ## explicit; go 1.17
 golang.org/x/sys/cpu
+golang.org/x/sys/execabs
+golang.org/x/sys/internal/unsafeheader
 golang.org/x/sys/unix
+golang.org/x/sys/windows
 # golang.org/x/text v0.5.0
 ## explicit; go 1.17
 golang.org/x/text/secure/bidirule
 golang.org/x/text/transform
 golang.org/x/text/unicode/bidi
 golang.org/x/text/unicode/norm
+# golang.org/x/tools v0.1.12
+## explicit; go 1.18
+golang.org/x/tools/go/gcexportdata
+golang.org/x/tools/go/internal/gcimporter
+golang.org/x/tools/go/internal/packagesdriver
+golang.org/x/tools/go/internal/pkgbits
+golang.org/x/tools/go/packages
+golang.org/x/tools/internal/event
+golang.org/x/tools/internal/event/core
+golang.org/x/tools/internal/event/keys
+golang.org/x/tools/internal/event/label
+golang.org/x/tools/internal/gocommand
+golang.org/x/tools/internal/packagesinternal
+golang.org/x/tools/internal/typeparams
+golang.org/x/tools/internal/typesinternal
 # google.golang.org/genproto v0.0.0-20200526211855-cb27e3aa2013
 ## explicit; go 1.11
 google.golang.org/genproto/googleapis/rpc/status
@@ -203,3 +321,6 @@ google.golang.org/protobuf/types/known/timestamppb
 # gopkg.in/yaml.v2 v2.4.0
 ## explicit; go 1.15
 gopkg.in/yaml.v2
+# gopkg.in/yaml.v3 v3.0.1
+## explicit
+gopkg.in/yaml.v3
