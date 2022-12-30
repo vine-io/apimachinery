@@ -71,7 +71,7 @@ github.com/vine-io/gscheduler/cron
 # github.com/vine-io/pkg/inject v0.1.0
 ## explicit; go 1.16
 github.com/vine-io/pkg/inject
-# github.com/vine-io/vine v1.4.8
+# github.com/vine-io/vine v1.4.11
 ## explicit; go 1.15
 github.com/vine-io/vine/core/broker
 github.com/vine-io/vine/core/codec
