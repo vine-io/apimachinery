@@ -42,6 +42,12 @@ type Scheme interface {
 	// New creates a new object
 	New(gvk schema.GroupVersionKind) (Object, error)
 
+	// AllGVKs returns all schema.GroupVersionKind
+	AllGVKs() []schema.GroupVersionKind
+
+	// AllObjects returns all Objects
+	AllObjects() []Object
+
 	// IsExists checks whether the object exists
 	IsExists(gvk schema.GroupVersionKind) bool
 

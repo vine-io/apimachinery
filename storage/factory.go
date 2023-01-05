@@ -81,6 +81,17 @@ func (s *simpleStorageFactory) IsExists(gvk schema.GroupVersionKind) bool {
 	return ok
 }
 
+func (s *simpleStorageFactory) AllStorages() []Storage {
+	storages := make([]Storage, 0)
+
+	for _, rt := range s.gvkToType {
+		storage := reflect.New(rt).Interface().(Storage)
+		storages = append(storages, storage)
+	}
+
+	return storages
+}
+
 func NewStorageFactory() Factory {
 	return &simpleStorageFactory{
 		gvkToType: map[schema.GroupVersionKind]reflect.Type{},
@@ -97,4 +108,8 @@ func NewStorage(in runtime.Object) (Storage, error) {
 
 func IsExists(gvk schema.GroupVersionKind) bool {
 	return DefaultFactory.IsExists(gvk)
+}
+
+func AllStorages() []Storage {
+	return DefaultFactory.AllStorages()
 }

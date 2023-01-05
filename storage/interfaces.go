@@ -58,4 +58,7 @@ type Factory interface {
 
 	// IsExists checks Storage exists
 	IsExists(gvk schema.GroupVersionKind) bool
+
+	// AllStorages returns all Storages
+	AllStorages() []Storage
 }

@@ -59,9 +59,30 @@ func (s *SimpleScheme) New(gvk schema.GroupVersionKind) (Object, error) {
 	return out, nil
 }
 
+// IsExists checks schema.GroupVersionKind exists
 func (s *SimpleScheme) IsExists(gvk schema.GroupVersionKind) bool {
 	_, ok := s.gvkToTypes[gvk]
 	return ok
+}
+
+// AllGVKs returns all schema.GroupVersionKind
+func (s *SimpleScheme) AllGVKs() []schema.GroupVersionKind {
+	gvks := make([]schema.GroupVersionKind, 0)
+	for gvk, _ := range s.gvkToTypes {
+		gvks = append(gvks, gvk)
+	}
+	return gvks
+}
+
+// AllObjects returns all Object
+func (s *SimpleScheme) AllObjects() []Object {
+	objects := make([]Object, 0)
+	for gvk, rv := range s.gvkToTypes {
+		out := reflect.New(rv).Interface().(Object)
+		out.GetObjectKind().SetGroupVersionKind(gvk)
+		objects = append(objects, out)
+	}
+	return objects
 }
 
 // AddKnownTypes add Object to Scheme
@@ -143,6 +164,16 @@ func NewObject(gvk schema.GroupVersionKind) (Object, error) {
 // IsExists calls DefaultScheme.IsExists()
 func IsExists(gvk schema.GroupVersionKind) bool {
 	return DefaultScheme.IsExists(gvk)
+}
+
+// AllGVKs calls DefaultScheme.AllGVKs()
+func AllGVKs() []schema.GroupVersionKind {
+	return DefaultScheme.AllGVKs()
+}
+
+// AllObjects calls DefaultScheme.AllObjects()
+func AllObjects() []Object {
+	return DefaultScheme.AllObjects()
 }
 
 // AddKnownTypes calls DefaultScheme.AddKnownTypes()
