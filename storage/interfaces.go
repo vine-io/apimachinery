@@ -47,6 +47,7 @@ type Storage interface {
 	BatchDelete(ctx context.Context, soft bool) error
 	Delete(ctx context.Context, soft bool) error
 	Tx(ctx context.Context) *dao.DB
+	TableName() string
 }
 
 type Factory interface {
