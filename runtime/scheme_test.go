@@ -84,6 +84,7 @@ func TestDefaultObject(t *testing.T) {
 			if got := DefaultObject(tt.args.src); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("DefaultObject() = %v, want %v", got, tt.want)
 			}
+			t.Log(tt.args.src)
 		})
 	}
 }
