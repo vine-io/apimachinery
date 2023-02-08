@@ -26,7 +26,7 @@ import (
 	"fmt"
 	"reflect"
 
-	"github.com/vine-io/vine/core/registry"
+	pb "github.com/vine-io/vine/lib/api/handler/openapi/proto"
 )
 
 type httpHandler struct {
@@ -38,9 +38,9 @@ type httpHandler struct {
 func newHttpHandler(handler interface{}, opts ...HandlerOption) Handler {
 	options := HandlerOptions{
 		Kind:    Resource,
-		Paths:   map[string]*registry.OpenAPIPath{},
-		Models:  map[string]*registry.Model{},
-		Schemes: &registry.SecuritySchemes{},
+		Paths:   map[string]*pb.OpenAPIPath{},
+		Models:  map[string]*pb.Model{},
+		Schemes: &pb.SecuritySchemes{},
 	}
 
 	for _, o := range opts {
@@ -71,7 +71,7 @@ func (h *httpHandler) Handler() interface{} {
 	return h.handler
 }
 
-func (h *httpHandler) Endpoints() []*registry.OpenAPIPath {
+func (h *httpHandler) Endpoints() []*pb.OpenAPIPath {
 	return nil
 }
 

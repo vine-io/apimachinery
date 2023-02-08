@@ -30,7 +30,7 @@ import (
 
 	"github.com/vine-io/apimachinery/runtime"
 	"github.com/vine-io/apimachinery/schema"
-	"github.com/vine-io/vine/core/registry"
+	pb "github.com/vine-io/vine/lib/api/handler/openapi/proto"
 )
 
 type Options struct {
@@ -105,9 +105,9 @@ const (
 type HandlerOptions struct {
 	Kind    HandlerKind
 	Target  *ResourceTarget
-	Paths   map[string]*registry.OpenAPIPath
-	Models  map[string]*registry.Model
-	Schemes *registry.SecuritySchemes
+	Paths   map[string]*pb.OpenAPIPath
+	Models  map[string]*pb.Model
+	Schemes *pb.SecuritySchemes
 }
 
 type ResourceTarget struct {
@@ -123,25 +123,25 @@ func WithKind(kind HandlerKind) HandlerOption {
 	}
 }
 
-func WithPath(url string, path *registry.OpenAPIPath) HandlerOption {
+func WithPath(url string, path *pb.OpenAPIPath) HandlerOption {
 	return func(o *HandlerOptions) {
 		if o.Paths == nil {
-			o.Paths = map[string]*registry.OpenAPIPath{}
+			o.Paths = map[string]*pb.OpenAPIPath{}
 		}
 		o.Paths[url] = path
 	}
 }
 
-func WithModel(path string, model *registry.Model) HandlerOption {
+func WithModel(path string, model *pb.Model) HandlerOption {
 	return func(o *HandlerOptions) {
 		if o.Models == nil {
-			o.Models = map[string]*registry.Model{}
+			o.Models = map[string]*pb.Model{}
 		}
 		o.Models[path] = model
 	}
 }
 
-func WithSchemes(schemes *registry.SecuritySchemes) HandlerOption {
+func WithSchemes(schemes *pb.SecuritySchemes) HandlerOption {
 	return func(o *HandlerOptions) {
 		o.Schemes = schemes
 	}
