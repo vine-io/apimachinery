@@ -774,8 +774,8 @@ github.com/vine-io/gscheduler v0.3.0 h1:eAd+1Uzdh99WsnApWYwVR8MmUSFLNn3mSVXS2vhF
 github.com/vine-io/gscheduler v0.3.0/go.mod h1:Aaq3G56fS4yPLRQRienH3F1yGfStEPrAVLr1os60ZI8=
 github.com/vine-io/pkg/inject v0.1.0 h1:m6j63ILzdxi+uTmpYi0xzo2EtQocvC+4DtKuPx41B7Y=
 github.com/vine-io/pkg/inject v0.1.0/go.mod h1:p4DMHbFeMWJtPQCRvLI6A4xEjA0BLbuum1gAORZp9oI=
-github.com/vine-io/vine v1.4.21 h1:pAwEITye7qKQfwsvb9f021E0AGcCX9ClvXgbuTPHZ1M=
-github.com/vine-io/vine v1.4.21/go.mod h1:1DjFEihbt4WQaB/SrScDvUuIJsPoKKsmaxdAYwp8R8g=
+github.com/vine-io/vine v1.5.0 h1:Ozj5FbBLhm5wfmvTcxIP1vQD1SQf1LRQEIOM9c+u3PQ=
+github.com/vine-io/vine v1.5.0/go.mod h1:1DjFEihbt4WQaB/SrScDvUuIJsPoKKsmaxdAYwp8R8g=
 github.com/xlab/treeprint v1.0.0/go.mod h1:IoImgRak9i3zJyuxOKUP1v4UZd1tMoKkq/Cimt1uhCg=
 github.com/yuin/goldmark v1.1.25/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 github.com/yuin/goldmark v1.1.27/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
