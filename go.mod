@@ -1,6 +1,6 @@
 module github.com/vine-io/apimachinery
 
-go 1.17
+go 1.18
 
 require (
 	github.com/evanphx/json-patch/v5 v5.2.0
@@ -9,7 +9,7 @@ require (
 	github.com/json-iterator/go v1.1.12
 	github.com/oxtoacart/bpool v0.0.0-20190530202638-03653db5a59c
 	github.com/vine-io/pkg/inject v0.1.0
-	github.com/vine-io/vine v1.5.1
+	github.com/vine-io/vine v1.5.2
 	go.uber.org/atomic v1.9.0
 	golang.org/x/net v0.5.0
 	google.golang.org/grpc v1.52.0
