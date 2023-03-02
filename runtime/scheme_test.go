@@ -15,14 +15,14 @@ type TestObj struct {
 	metav1.TypeMeta
 }
 
-func (t *TestObj) DeepCopy() Object {
+func (t *TestObj) DeepCopyObject() Object {
 	out := new(TestObj)
 	*out = *t
 	return out
 }
 
-func (t *TestObj) DeepFrom(out Object) {
-	out = t.DeepCopy()
+func (t *TestObj) DeepFromObject(out Object) {
+	out = t.DeepCopyObject()
 }
 
 func init() {

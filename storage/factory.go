@@ -28,6 +28,7 @@ import (
 
 	"github.com/vine-io/apimachinery/runtime"
 	"github.com/vine-io/apimachinery/schema"
+	"gorm.io/gorm"
 )
 
 var (
@@ -37,29 +38,30 @@ var (
 	ErrStorageAutoMigrate  = fmt.Errorf("auto migrate storage")
 )
 
-var DefaultFactory Factory = NewStorageFactory()
-
 type simpleStorageFactory struct {
 	gvkToType map[schema.GroupVersionKind]reflect.Type
 }
 
-func (s *simpleStorageFactory) AddKnownStorage(gvk schema.GroupVersionKind, storage Storage) error {
-	rt := reflect.TypeOf(storage)
-	if rt.Kind() != reflect.Ptr {
-		return ErrStorageIsNotPointer
-	}
-	rt = rt.Elem()
+func (s *simpleStorageFactory) AddKnownStorages(gv schema.GroupVersion, sets ...Storage) error {
 
-	s.gvkToType[gvk] = rt
+	for _, storage := range sets {
+		rt := reflect.TypeOf(storage)
+		if rt.Kind() != reflect.Ptr {
+			return ErrStorageIsNotPointer
+		}
+		rt = rt.Elem()
+		gvk := gv.WithKind(storage.Target().Elem().Name())
+		s.gvkToType[gvk] = rt
 
-	if err := storage.AutoMigrate(); err != nil {
-		return fmt.Errorf("%w: %v", ErrStorageAutoMigrate, err)
+		if err := storage.AutoMigrate(); err != nil {
+			return fmt.Errorf("%w: %v", ErrStorageAutoMigrate, err)
+		}
 	}
 
 	return nil
 }
 
-func (s *simpleStorageFactory) NewStorage(in runtime.Object) (Storage, error) {
+func (s *simpleStorageFactory) NewStorage(tx *gorm.DB, in runtime.Object) (Storage, error) {
 	gvk := in.GetObjectKind().GroupVersionKind()
 	rt, exists := s.gvkToType[gvk]
 	if !exists {
@@ -68,7 +70,7 @@ func (s *simpleStorageFactory) NewStorage(in runtime.Object) (Storage, error) {
 
 	storage := reflect.New(rt).Interface().(Storage)
 
-	err := storage.Load(in)
+	err := storage.Load(tx, in)
 	if err != nil {
 		return nil, fmt.Errorf("load object: %v", err)
 	}
@@ -96,20 +98,4 @@ func NewStorageFactory() Factory {
 	return &simpleStorageFactory{
 		gvkToType: map[schema.GroupVersionKind]reflect.Type{},
 	}
-}
-
-func AddKnownStorage(gvk schema.GroupVersionKind, storage Storage) error {
-	return DefaultFactory.AddKnownStorage(gvk, storage)
-}
-
-func NewStorage(in runtime.Object) (Storage, error) {
-	return DefaultFactory.NewStorage(in)
-}
-
-func IsExists(gvk schema.GroupVersionKind) bool {
-	return DefaultFactory.IsExists(gvk)
-}
-
-func AllStorages() []Storage {
-	return DefaultFactory.AllStorages()
 }

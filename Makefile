@@ -6,8 +6,8 @@ vendor:
 	go mod vendor
 
 proto:
-	cd $(GOPATH)/src && \
-	protoc -I=$(GOPATH)/src --gogo_out=:. --validator_out=:. --deepcopy_out=:. $(PACKAGE)/apis/meta/v1/meta.proto
+	deepcopy-gen -i github.com/vine-io/apimachinery/apis/meta/v1
+	goproto-gen -p github.com/vine-io/apimachinery/apis/meta/v1
 
 release:
 ifeq "$(TAG)" ""

@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-package metav1
+package v1
 
 import "github.com/vine-io/apimachinery/schema"
 
@@ -31,8 +31,8 @@ type Meta interface {
 	SetName(name string)
 	GetUID() string
 	SetUID(uid string)
-	GetResourceVersion() int64
-	SetResourceVersion(rv int64)
+	GetResourceVersion() string
+	SetResourceVersion(rv string)
 	GetNamespace() string
 	SetNamespace(ns string)
 	GetCreationTimestamp() int64
@@ -45,8 +45,8 @@ type Meta interface {
 	SetLabels(labels map[string]string)
 	GetAnnotations() map[string]string
 	SetAnnotations(annotations map[string]string)
-	GetClusterName() string
-	SetClusterName(cn string)
+	GetGenerateName() string
+	SetGenerateName(cn string)
 	GetReferences() []*OwnerReference
 	SetReferences(references []*OwnerReference)
 }
@@ -67,11 +67,11 @@ func (m *ObjectMeta) SetUID(uid string) {
 	m.Uid = uid
 }
 
-func (m *ObjectMeta) GetResourceVersion() int64 {
+func (m *ObjectMeta) GetResourceVersion() string {
 	return m.ResourceVersion
 }
 
-func (m *ObjectMeta) SetResourceVersion(rv int64) {
+func (m *ObjectMeta) SetResourceVersion(rv string) {
 	m.ResourceVersion = rv
 }
 
@@ -123,12 +123,12 @@ func (m *ObjectMeta) SetAnnotations(annotations map[string]string) {
 	m.Annotations = annotations
 }
 
-func (m *ObjectMeta) GetClusterName() string {
-	return m.ClusterName
+func (m *ObjectMeta) GetGenerateName() string {
+	return m.GenerateName
 }
 
-func (m *ObjectMeta) SetClusterName(cn string) {
-	m.ClusterName = cn
+func (m *ObjectMeta) SetGenerateName(cn string) {
+	m.GenerateName = cn
 }
 
 func (m *ObjectMeta) GetReferences() []*OwnerReference {
@@ -137,6 +137,10 @@ func (m *ObjectMeta) GetReferences() []*OwnerReference {
 
 func (m *ObjectMeta) SetReferences(references []*OwnerReference) {
 	m.References = references
+}
+
+func (m *ObjectMeta) PrimaryKey() (string, any, bool) {
+	return "uid", m.Uid, m.Uid == ""
 }
 
 var _ schema.ObjectKind = (*TypeMeta)(nil)
