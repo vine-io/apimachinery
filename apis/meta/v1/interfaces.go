@@ -22,7 +22,24 @@
 
 package v1
 
-import "github.com/vine-io/apimachinery/schema"
+import (
+	"github.com/vine-io/apimachinery/schema"
+)
+
+var _ schema.ObjectKind = (*TypeMeta)(nil)
+
+func (m *TypeMeta) GetObjectKind() schema.ObjectKind {
+	return m
+}
+
+func (m *TypeMeta) SetGroupVersionKind(gvk schema.GroupVersionKind) {
+	m.ApiVersion = gvk.APIGroup()
+	m.Kind = gvk.Kind
+}
+
+func (m *TypeMeta) GroupVersionKind() schema.GroupVersionKind {
+	return schema.FromGVK(m.ApiVersion + "." + m.Kind)
+}
 
 var _ Meta = (*ObjectMeta)(nil)
 
@@ -143,17 +160,56 @@ func (m *ObjectMeta) PrimaryKey() (string, any, bool) {
 	return "uid", m.UID, m.UID == ""
 }
 
-var _ schema.ObjectKind = (*TypeMeta)(nil)
+/*
+type ListMeta struct {
+	ResourceVersion string `json:"resourceVersion,omitempty" protobuf:"bytes,1,opt,name=resourceVersion"`
+	Page            int32  `json:"page,omitempty" protobuf:"varint,2,opt,name=page"`
+	Size            int32  `json:"size,omitempty" protobuf:"varint,3,opt,name=size"`
+	Total           int64  `json:"total,omitempty" protobuf:"varint,4,opt,name=total"`
+}
+*/
 
-func (m *TypeMeta) GetObjectKind() schema.ObjectKind {
-	return m
+var _ Lister = (*ListMeta)(nil)
+
+type Lister interface {
+	GetResourceVersion() string
+	SetResourceVersion(version string)
+	GetPage() int32
+	SetPage(page int32)
+	GetSize() int32
+	SetSize(s int32)
+	GetTotal() int64
+	SetTotal(total int64)
 }
 
-func (m *TypeMeta) SetGroupVersionKind(gvk schema.GroupVersionKind) {
-	m.ApiVersion = gvk.APIGroup()
-	m.Kind = gvk.Kind
+func (m *ListMeta) GetResourceVersion() string {
+	return m.ResourceVersion
 }
 
-func (m *TypeMeta) GroupVersionKind() schema.GroupVersionKind {
-	return schema.FromGVK(m.ApiVersion + "." + m.Kind)
+func (m *ListMeta) SetResourceVersion(version string) {
+	m.ResourceVersion = version
+}
+
+func (m *ListMeta) GetPage() int32 {
+	return m.Page
+}
+
+func (m *ListMeta) SetPage(page int32) {
+	m.Page = page
+}
+
+func (m *ListMeta) GetSize() int32 {
+	return m.Size
+}
+
+func (m *ListMeta) SetSize(s int32) {
+	m.Size = s
+}
+
+func (m *ListMeta) GetTotal() int64 {
+	return m.Total
+}
+
+func (m *ListMeta) SetTotal(total int64) {
+	m.Total = total
 }
