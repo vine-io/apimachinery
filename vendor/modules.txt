@@ -35,6 +35,7 @@ github.com/goccy/go-json/internal/runtime
 # github.com/gogo/protobuf v1.3.2
 ## explicit; go 1.15
 github.com/gogo/protobuf/proto
+github.com/gogo/protobuf/sortkeys
 # github.com/golang/protobuf v1.5.2
 ## explicit; go 1.9
 github.com/golang/protobuf/jsonpb
@@ -107,11 +108,6 @@ github.com/vine-io/vine/core/registry/mdns
 github.com/vine-io/vine/core/server
 github.com/vine-io/vine/lib/api
 github.com/vine-io/vine/lib/api/handler/openapi/proto
-github.com/vine-io/vine/lib/dao
-github.com/vine-io/vine/lib/dao/clause
-github.com/vine-io/vine/lib/dao/logger
-github.com/vine-io/vine/lib/dao/schema
-github.com/vine-io/vine/lib/dao/utils
 github.com/vine-io/vine/lib/errors
 github.com/vine-io/vine/lib/logger
 github.com/vine-io/vine/lib/logger/log

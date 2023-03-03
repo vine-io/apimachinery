@@ -90,13 +90,19 @@ type TestStorage struct {
 	exprs []clause.Expression `json:"-" dao:"-"`
 }
 
+func (m *TestStorage) FindPk(ctx context.Context, pk any) (runtime.Object, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
 func (m *TestStorage) AutoMigrate() error {
 	return nil
 }
 
-func (m *TestStorage) Load(tx *gorm.DB, object runtime.Object) {
+func (m *TestStorage) Load(tx *gorm.DB, object runtime.Object) error {
 	in := object.(*TestObj)
 	_ = in
+	return nil
 }
 
 func (m *TestStorage) WithTx(tx *gorm.DB) *TestStorage {
