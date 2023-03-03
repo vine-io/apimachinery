@@ -34,11 +34,12 @@ type StatusCode int32
 
 // +gogo:deepcopy=true
 // +gogo:genproto=true
+// +gogo:gengorm=true
 type TypeMeta struct {
 	// 资源类型
-	Kind string `json:"kind,omitempty" protobuf:"bytes,1,opt,name=kind"`
+	Kind string `json:"kind,omitempty" protobuf:"bytes,1,opt,name=kind" gorm:"column:kind"`
 	// 资源版本信息
-	ApiVersion string `json:"apiVersion,omitempty" protobuf:"bytes,2,opt,name=apiVersion"`
+	ApiVersion string `json:"apiVersion,omitempty" protobuf:"bytes,2,opt,name=apiVersion" gorm:"column:apiVersion"`
 }
 
 // +gogo:deepcopy=true
@@ -68,13 +69,12 @@ func (m *OwnerReference) GormDBDataType(db *gorm.DB, field *schema.Field) string
 // +gogo:deepcopy=true
 // +gogo:genproto=true
 // +gogo:gengorm=true
-// +gogo:gengorm:external=false
 type ObjectMeta struct {
 	// 资源名称
 	Name string `json:"name" protobuf:"bytes,1,opt,name=name" gorm:"column:name"`
 	// 资源 id
 	// +primaryKey
-	Uid string `json:"uid" protobuf:"bytes,2,opt,name=uid" gorm:"column:uid;primaryKey"`
+	UID string `json:"uid" protobuf:"bytes,2,opt,name=uid" gorm:"column:uid;primaryKey"`
 	// 资源版本信息
 	ResourceVersion string `json:"resourceVersion" protobuf:"bytes,3,opt,name=resourceVersion" gorm:"column:resourceVersion"`
 	// 资源描述信息

@@ -35,7 +35,6 @@ message ListMeta {
 // +gogo:deepcopy=true
 // +gogo:genproto=true
 // +gogo:gengorm=true
-// +gogo:gengorm:external=false
 message ObjectMeta {
   // 资源名称
   optional string name = 1;
@@ -100,6 +99,7 @@ message State {
 
 // +gogo:deepcopy=true
 // +gogo:genproto=true
+// +gogo:gengorm=true
 message TypeMeta {
   // 资源类型
   optional string kind = 1;

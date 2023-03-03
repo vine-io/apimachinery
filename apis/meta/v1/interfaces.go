@@ -60,11 +60,11 @@ func (m *ObjectMeta) SetName(name string) {
 }
 
 func (m *ObjectMeta) GetUID() string {
-	return m.Uid
+	return m.UID
 }
 
 func (m *ObjectMeta) SetUID(uid string) {
-	m.Uid = uid
+	m.UID = uid
 }
 
 func (m *ObjectMeta) GetResourceVersion() string {
@@ -140,7 +140,7 @@ func (m *ObjectMeta) SetReferences(references []*OwnerReference) {
 }
 
 func (m *ObjectMeta) PrimaryKey() (string, any, bool) {
-	return "uid", m.Uid, m.Uid == ""
+	return "uid", m.UID, m.UID == ""
 }
 
 var _ schema.ObjectKind = (*TypeMeta)(nil)
