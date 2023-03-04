@@ -69,12 +69,46 @@ func (m *OwnerReference) GormDBDataType(db *gorm.DB, field *schema.Field) string
 // +gogo:deepcopy=true
 // +gogo:genproto=true
 // +gogo:gengorm=true
+type EntityMeta struct {
+	// 资源名称
+	Name string `json:"name" protobuf:"bytes,1,opt,name=name" gorm:"column:name"`
+	// 资源 id
+	// +primaryKey
+	// +gen:primaryKey
+	Uid int64 `json:"uid" protobuf:"varint,2,opt,name=uid" gorm:"column:uid;primaryKey"`
+	// 资源版本信息
+	ResourceVersion string `json:"resourceVersion" protobuf:"bytes,3,opt,name=resourceVersion" gorm:"column:resourceVersion"`
+	// 资源描述信息
+	Description string `json:"description" protobuf:"bytes,4,opt,name=description" gorm:"column:description"`
+	// 资源命名空间
+	Namespace string `json:"namespace" protobuf:"bytes,5,opt,name=namespace" gorm:"column:namespace"`
+	// 资源创建时间
+	CreationTimestamp int64 `json:"creationTimestamp" protobuf:"varint,6,opt,name=creationTimestamp" gorm:"column:creationTimestamp"`
+	// 资源更新时间
+	UpdateTimestamp int64 `json:"updateTimestamp" protobuf:"varint,7,opt,name=updateTimestamp" gorm:"column:updateTimestamp"`
+	// 删除时间
+	DeletionTimestamp int64  `json:"deletionTimestamp" protobuf:"varint,8,opt,name=deletionTimestamp" gorm:"column:deletionTimestamp"`
+	GenerateName      string `json:"generateName" protobuf:"bytes,9,opt,name=generateName" gorm:"column:generateName"`
+	// 资源标签
+	Labels dao.Map[string, string] `json:"labels" protobuf:"bytes,10,rep,name=labels" gorm:"column:labels;serializer:json"`
+	// 资源注解
+	// 只读
+	Annotations dao.Map[string, string] `json:"annotations" protobuf:"bytes,11,rep,name=annotations" gorm:"column:annotations;serializer:json"`
+	// 资源关系信息
+	// 该资源示例能稳定运行的依赖资源
+	References dao.JSONArray[*OwnerReference] `json:"references" protobuf:"bytes,12,rep,name=references" gorm:"column:references;serializer:json"`
+}
+
+// +gogo:deepcopy=true
+// +gogo:genproto=true
+// +gogo:gengorm=true
 type ObjectMeta struct {
 	// 资源名称
 	Name string `json:"name" protobuf:"bytes,1,opt,name=name" gorm:"column:name"`
 	// 资源 id
 	// +primaryKey
-	UID string `json:"uid" protobuf:"bytes,2,opt,name=uid" gorm:"column:uid;primaryKey"`
+	// +gen:primaryKey
+	Uid string `json:"uid" protobuf:"bytes,2,opt,name=uid" gorm:"column:uid;primaryKey"`
 	// 资源版本信息
 	ResourceVersion string `json:"resourceVersion" protobuf:"bytes,3,opt,name=resourceVersion" gorm:"column:resourceVersion"`
 	// 资源描述信息

@@ -41,13 +41,11 @@ func (m *TypeMeta) GroupVersionKind() schema.GroupVersionKind {
 	return schema.FromGVK(m.ApiVersion + "." + m.Kind)
 }
 
-var _ Meta = (*ObjectMeta)(nil)
-
 type Meta interface {
 	GetName() string
 	SetName(name string)
-	GetUID() string
-	SetUID(uid string)
+	GetUID() any    // int or string
+	SetUID(uid any) // int or string
 	GetResourceVersion() string
 	SetResourceVersion(rv string)
 	GetNamespace() string
@@ -68,6 +66,8 @@ type Meta interface {
 	SetReferences(references []*OwnerReference)
 }
 
+var _ Meta = (*ObjectMeta)(nil)
+
 func (m *ObjectMeta) GetName() string {
 	return m.Name
 }
@@ -76,12 +76,12 @@ func (m *ObjectMeta) SetName(name string) {
 	m.Name = name
 }
 
-func (m *ObjectMeta) GetUID() string {
-	return m.UID
+func (m *ObjectMeta) GetUID() any {
+	return m.Uid
 }
 
-func (m *ObjectMeta) SetUID(uid string) {
-	m.UID = uid
+func (m *ObjectMeta) SetUID(uid any) {
+	m.Uid = uid.(string)
 }
 
 func (m *ObjectMeta) GetResourceVersion() string {
@@ -157,7 +157,101 @@ func (m *ObjectMeta) SetReferences(references []*OwnerReference) {
 }
 
 func (m *ObjectMeta) PrimaryKey() (string, any, bool) {
-	return "uid", m.UID, m.UID == ""
+	return "uid", m.Uid, m.Uid == ""
+}
+
+var _ Meta = (*EntityMeta)(nil)
+
+func (m *EntityMeta) GetName() string {
+	return m.Name
+}
+
+func (m *EntityMeta) SetName(name string) {
+	m.Name = name
+}
+
+func (m *EntityMeta) GetUID() any {
+	return m.Uid
+}
+
+func (m *EntityMeta) SetUID(uid any) {
+	m.Uid = uid.(int64)
+}
+
+func (m *EntityMeta) GetResourceVersion() string {
+	return m.ResourceVersion
+}
+
+func (m *EntityMeta) SetResourceVersion(rv string) {
+	m.ResourceVersion = rv
+}
+
+func (m *EntityMeta) GetNamespace() string {
+	return m.Namespace
+}
+
+func (m *EntityMeta) SetNamespace(ns string) {
+	m.Namespace = ns
+}
+
+func (m *EntityMeta) GetCreationTimestamp() int64 {
+	return m.CreationTimestamp
+}
+
+func (m *EntityMeta) SetCreationTimestamp(t int64) {
+	m.CreationTimestamp = t
+}
+
+func (m *EntityMeta) GetUpdateTimestamp() int64 {
+	return m.UpdateTimestamp
+}
+
+func (m *EntityMeta) SetUpdateTimestamp(t int64) {
+	m.UpdateTimestamp = t
+}
+
+func (m *EntityMeta) GetDeletionTimestamp() int64 {
+	return m.DeletionTimestamp
+}
+
+func (m *EntityMeta) SetDeletionTimestamp(t int64) {
+	m.DeletionTimestamp = t
+}
+
+func (m *EntityMeta) GetLabels() map[string]string {
+	return m.Labels
+}
+
+func (m *EntityMeta) SetLabels(labels map[string]string) {
+	m.Labels = labels
+}
+
+func (m *EntityMeta) GetAnnotations() map[string]string {
+	return m.Annotations
+}
+
+func (m *EntityMeta) SetAnnotations(annotations map[string]string) {
+	m.Annotations = annotations
+}
+
+func (m *EntityMeta) GetGenerateName() string {
+	return m.GenerateName
+}
+
+func (m *EntityMeta) SetGenerateName(cn string) {
+	m.GenerateName = cn
+}
+
+func (m *EntityMeta) GetReferences() []*OwnerReference {
+	return m.References
+}
+
+func (m *EntityMeta) SetReferences(references []*OwnerReference) {
+	m.References = references
+}
+
+func (m *EntityMeta) PrimaryKey() (string, any, bool) {
+	return "uid", m.Uid, m.Uid == 0
 }
 
 /*
