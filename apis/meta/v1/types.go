@@ -32,6 +32,11 @@ import (
 
 type StatusCode int32
 
+const (
+	StatusNoReady StatusCode = 0
+	StatusReady   StatusCode = 1
+)
+
 // +gogo:deepcopy=true
 // +gogo:genproto=true
 // +gogo:gengorm=true
