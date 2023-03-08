@@ -364,6 +364,9 @@ func (jsonQuery *JSONQueryExpression) Equals(value interface{}, keys ...string) 
 // Build implements clause.Expression
 func (jsonQuery *JSONQueryExpression) Build(builder clause.Builder) {
 	if stmt, ok := builder.(*gorm.Statement); ok {
+		if jsonQuery.tx != nil {
+			stmt.DB = jsonQuery.tx
+		}
 		switch stmt.Dialector.Name() {
 		case "mysql":
 			switch {
