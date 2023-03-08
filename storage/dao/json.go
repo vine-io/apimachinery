@@ -302,9 +302,11 @@ func GetGormDBDataType(db *gorm.DB, field *schema.Field) string {
 
 // JSONQueryExpression json query expression, implements clause.Expression interface to use as querier
 type JSONQueryExpression struct {
+	tx          *gorm.DB
 	column      string
 	keys        []string
 	hasKeys     bool
+	contains    bool
 	equals      bool
 	equalsValue interface{}
 	extract     bool
@@ -314,6 +316,11 @@ type JSONQueryExpression struct {
 // JSONQuery query column as json
 func JSONQuery(column string) *JSONQueryExpression {
 	return &JSONQueryExpression{column: column}
+}
+
+func (jsonQuery *JSONQueryExpression) Tx(tx *gorm.DB) *JSONQueryExpression {
+	jsonQuery.tx = tx
+	return jsonQuery
 }
 
 // Extract extract json with path
@@ -330,6 +337,22 @@ func (jsonQuery *JSONQueryExpression) HasKey(keys ...string) *JSONQueryExpressio
 	return jsonQuery
 }
 
+// Contains returns clause.Expression
+func (jsonQuery *JSONQueryExpression) Contains(values interface{}, keys ...string) *JSONQueryExpression {
+	if jsonQuery.tx != nil {
+		switch jsonQuery.tx.Dialector.Name() {
+		case "sqlite":
+			jsonQuery.tx.Statement.InnerJoins(fmt.Sprintf("INNER JOIN JSON_EACH(%s)", jsonQuery.tx.Statement.Quote(jsonQuery.column)))
+		case "postgres":
+			jsonQuery.tx.Statement.InnerJoins(fmt.Sprintf("CROSS JOIN LATERAL jsonb_array_elements(%s) o%s", jsonQuery.tx.Statement.Quote(jsonQuery.column), jsonQuery.column))
+		}
+	}
+	jsonQuery.keys = keys
+	jsonQuery.contains = true
+	jsonQuery.equalsValue = values
+	return jsonQuery
+}
+
 // Equals Keys returns clause.Expression
 func (jsonQuery *JSONQueryExpression) Equals(value interface{}, keys ...string) *JSONQueryExpression {
 	jsonQuery.keys = keys
@@ -342,8 +365,24 @@ func (jsonQuery *JSONQueryExpression) Equals(value interface{}, keys ...string) 
 func (jsonQuery *JSONQueryExpression) Build(builder clause.Builder) {
 	if stmt, ok := builder.(*gorm.Statement); ok {
 		switch stmt.Dialector.Name() {
-		case "mysql", "sqlite":
+		case "mysql":
 			switch {
+			case jsonQuery.contains:
+
+				if len(jsonQuery.keys) == 0 {
+					builder.WriteString(fmt.Sprintf("JSON_CONTAINS(%s, '%s')", stmt.Quote(jsonQuery.column), jsonQuery.equalsValue))
+				} else {
+					var sm string
+					for i := len(jsonQuery.keys) - 1; i >= 0; i-- {
+						if i == len(jsonQuery.keys)-1 {
+							sm = fmt.Sprintf("JSON_OBJECT('%s', '%s')", jsonQuery.keys[i], jsonQuery.equalsValue)
+						} else {
+							sm = fmt.Sprintf("JSON_OBJECT('%s', %s)", jsonQuery.keys[i], sm)
+						}
+					}
+					builder.WriteString(fmt.Sprintf("JSON_CONTAINS(%s, %s)", stmt.Quote(jsonQuery.column), sm))
+				}
+
 			case jsonQuery.extract:
 				builder.WriteString("JSON_EXTRACT(")
 				builder.WriteQuoted(jsonQuery.column)
@@ -372,8 +411,55 @@ func (jsonQuery *JSONQueryExpression) Build(builder clause.Builder) {
 					}
 				}
 			}
+
+		case "sqlite":
+
+			switch {
+			case jsonQuery.contains:
+				if len(jsonQuery.keys) == 0 {
+					builder.WriteString(fmt.Sprintf("JSON_EACH.value ="))
+				} else {
+					builder.WriteString(fmt.Sprintf("JSON_EXTRACT(JSON_EACH.value, '$.%s') = ", strings.Join(jsonQuery.keys, ".")))
+				}
+				stmt.AddVar(builder, jsonQuery.equalsValue)
+			case jsonQuery.extract:
+				builder.WriteString("JSON_EXTRACT(")
+				builder.WriteQuoted(jsonQuery.column)
+				builder.WriteByte(',')
+				builder.AddVar(stmt, jsonQuery.path)
+				builder.WriteString(")")
+			case jsonQuery.hasKeys:
+				if len(jsonQuery.keys) > 0 {
+					builder.WriteString("JSON_EXTRACT(")
+					builder.WriteQuoted(jsonQuery.column)
+					builder.WriteByte(',')
+					builder.AddVar(stmt, jsonQueryJoin(jsonQuery.keys))
+					builder.WriteString(") IS NOT NULL")
+				}
+			case jsonQuery.equals:
+				if len(jsonQuery.keys) > 0 {
+					builder.WriteString("JSON_EXTRACT(")
+					builder.WriteQuoted(jsonQuery.column)
+					builder.WriteByte(',')
+					builder.AddVar(stmt, jsonQueryJoin(jsonQuery.keys))
+					builder.WriteString(") = ")
+					if value, ok := jsonQuery.equalsValue.(bool); ok {
+						builder.WriteString(strconv.FormatBool(value))
+					} else {
+						stmt.AddVar(builder, jsonQuery.equalsValue)
+					}
+				}
+			}
+
 		case "postgres":
 			switch {
+			case jsonQuery.contains:
+				if len(jsonQuery.keys) == 0 {
+					builder.WriteString(fmt.Sprintf("%s ? ", stmt.Quote("o"+jsonQuery.column)))
+				} else {
+					builder.WriteString(fmt.Sprintf("%s %s ", pgJoin("o"+jsonQuery.column, jsonQuery.keys...), "="))
+				}
+				stmt.AddVar(builder, jsonQuery.equalsValue)
 			case jsonQuery.hasKeys:
 				if len(jsonQuery.keys) > 0 {
 					stmt.WriteQuoted(jsonQuery.column)
@@ -431,4 +517,20 @@ func jsonQueryJoin(keys []string) string {
 		b.WriteString(key)
 	}
 	return b.String()
+}
+
+func pgJoin(column string, keys ...string) string {
+	if len(keys) == 1 {
+		return column + "->>" + "'" + keys[0] + "'"
+	}
+	outs := []string{column}
+	for item, key := range keys {
+		if item == len(keys)-1 {
+			outs = append(outs, "->>")
+		} else {
+			outs = append(outs, "->")
+		}
+		outs = append(outs, "'"+key+"'")
+	}
+	return strings.Join(outs, "")
 }
