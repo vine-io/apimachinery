@@ -302,7 +302,6 @@ func GetGormDBDataType(db *gorm.DB, field *schema.Field) string {
 
 // JSONQueryExpression json query expression, implements clause.Expression interface to use as querier
 type JSONQueryExpression struct {
-	tx          *gorm.DB
 	column      string
 	keys        []string
 	hasKeys     bool
@@ -316,11 +315,6 @@ type JSONQueryExpression struct {
 // JSONQuery query column as json
 func JSONQuery(column string) *JSONQueryExpression {
 	return &JSONQueryExpression{column: column}
-}
-
-func (jsonQuery *JSONQueryExpression) Tx(tx *gorm.DB) *JSONQueryExpression {
-	jsonQuery.tx = tx
-	return jsonQuery
 }
 
 // Extract extract json with path
@@ -338,19 +332,18 @@ func (jsonQuery *JSONQueryExpression) HasKey(keys ...string) *JSONQueryExpressio
 }
 
 // Contains returns clause.Expression
-func (jsonQuery *JSONQueryExpression) Contains(values interface{}, keys ...string) *JSONQueryExpression {
-	if jsonQuery.tx != nil {
-		switch jsonQuery.tx.Dialector.Name() {
-		case "sqlite":
-			jsonQuery.tx.InnerJoins(fmt.Sprintf("JSON_EACH(%s)", jsonQuery.tx.Statement.Quote(jsonQuery.column)))
-		case "postgres":
-			jsonQuery.tx.Joins(fmt.Sprintf("LATERAL jsonb_array_elements(%s) o%s", jsonQuery.tx.Statement.Quote(jsonQuery.column), jsonQuery.column))
-		}
+func (jsonQuery *JSONQueryExpression) Contains(tx *gorm.DB, values interface{}, keys ...string) (*JSONQueryExpression, string) {
+	var query string
+	switch tx.Dialector.Name() {
+	case "sqlite":
+		query = fmt.Sprintf("INNER JOIN JSON_EACH(%s)", tx.Statement.Quote(jsonQuery.column))
+	case "postgres":
+		query = fmt.Sprintf("CROSS JOIN LATERAL jsonb_array_elements(%s) o%s", tx.Statement.Quote(jsonQuery.column), jsonQuery.column)
 	}
 	jsonQuery.keys = keys
 	jsonQuery.contains = true
 	jsonQuery.equalsValue = values
-	return jsonQuery
+	return jsonQuery, query
 }
 
 // Equals Keys returns clause.Expression
@@ -364,9 +357,6 @@ func (jsonQuery *JSONQueryExpression) Equals(value interface{}, keys ...string) 
 // Build implements clause.Expression
 func (jsonQuery *JSONQueryExpression) Build(builder clause.Builder) {
 	if stmt, ok := builder.(*gorm.Statement); ok {
-		if jsonQuery.tx != nil {
-			stmt.DB = jsonQuery.tx
-		}
 		switch stmt.Dialector.Name() {
 		case "mysql":
 			switch {
