@@ -6,8 +6,8 @@ vendor:
 	go mod vendor
 
 proto:
-	deepcopy-gen -i github.com/vine-io/apimachinery/apis/meta/v1
 	goproto-gen -p github.com/vine-io/apimachinery/apis/meta/v1
+	deepcopy-gen -i github.com/vine-io/apimachinery/apis/meta/v1
 
 release:
 ifeq "$(TAG)" ""
