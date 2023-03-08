@@ -417,9 +417,9 @@ func (jsonQuery *JSONQueryExpression) Build(builder clause.Builder) {
 			switch {
 			case jsonQuery.contains:
 				if len(jsonQuery.keys) == 0 {
-					builder.WriteString(fmt.Sprintf("JSON_EACH.value ="))
+					builder.WriteString(fmt.Sprintf("JSON_EACH.value %s ", "="))
 				} else {
-					builder.WriteString(fmt.Sprintf("JSON_EXTRACT(JSON_EACH.value, '$.%s') = ", strings.Join(jsonQuery.keys, ".")))
+					builder.WriteString(fmt.Sprintf("JSON_EXTRACT(JSON_EACH.value, '$.%s') %s ", strings.Join(jsonQuery.keys, "."), "="))
 				}
 				stmt.AddVar(builder, jsonQuery.equalsValue)
 			case jsonQuery.extract:
