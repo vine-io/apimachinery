@@ -342,9 +342,9 @@ func (jsonQuery *JSONQueryExpression) Contains(values interface{}, keys ...strin
 	if jsonQuery.tx != nil {
 		switch jsonQuery.tx.Dialector.Name() {
 		case "sqlite":
-			jsonQuery.tx.Statement.InnerJoins(fmt.Sprintf("INNER JOIN JSON_EACH(%s)", jsonQuery.tx.Statement.Quote(jsonQuery.column)))
+			jsonQuery.tx.InnerJoins(fmt.Sprintf("JSON_EACH(%s)", jsonQuery.tx.Statement.Quote(jsonQuery.column)))
 		case "postgres":
-			jsonQuery.tx.Statement.InnerJoins(fmt.Sprintf("CROSS JOIN LATERAL jsonb_array_elements(%s) o%s", jsonQuery.tx.Statement.Quote(jsonQuery.column), jsonQuery.column))
+			jsonQuery.tx.Joins(fmt.Sprintf("LATERAL jsonb_array_elements(%s) o%s", jsonQuery.tx.Statement.Quote(jsonQuery.column), jsonQuery.column))
 		}
 	}
 	jsonQuery.keys = keys
