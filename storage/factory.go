@@ -42,7 +42,7 @@ type simpleStorageFactory struct {
 	gvkToType map[schema.GroupVersionKind]reflect.Type
 }
 
-func (s *simpleStorageFactory) AddKnownStorages(gv schema.GroupVersion, sets ...Storage) error {
+func (s *simpleStorageFactory) AddKnownStorages(tx *gorm.DB, gv schema.GroupVersion, sets ...Storage) error {
 
 	for _, storage := range sets {
 		rt := reflect.TypeOf(storage)
@@ -53,7 +53,7 @@ func (s *simpleStorageFactory) AddKnownStorages(gv schema.GroupVersion, sets ...
 		gvk := gv.WithKind(storage.Target().Elem().Name())
 		s.gvkToType[gvk] = rt
 
-		if err := storage.AutoMigrate(); err != nil {
+		if err := storage.AutoMigrate(tx); err != nil {
 			return fmt.Errorf("%w: %v", ErrStorageAutoMigrate, err)
 		}
 	}

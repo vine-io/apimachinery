@@ -34,7 +34,7 @@ import (
 
 type Storage interface {
 	Target() reflect.Type
-	AutoMigrate() error
+	AutoMigrate(tx *gorm.DB) error
 	Load(tx *gorm.DB, object runtime.Object) error
 	FindPage(ctx context.Context, page, size int32) (runtime.Object, error)
 	FindAll(ctx context.Context) (runtime.Object, error)
@@ -49,7 +49,7 @@ type Storage interface {
 
 type Factory interface {
 	// AddKnownStorages registers Storages
-	AddKnownStorages(gv schema.GroupVersion, sets ...Storage) error
+	AddKnownStorages(tx *gorm.DB, gv schema.GroupVersion, sets ...Storage) error
 
 	// NewStorage get a Storage by runtime.Object
 	NewStorage(tx *gorm.DB, in runtime.Object) (Storage, error)

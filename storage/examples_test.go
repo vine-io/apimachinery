@@ -27,18 +27,19 @@ var (
 	sets         = make([]Storage, 0)
 )
 
-func addKnownFactory(f Factory) error {
-	return f.AddKnownStorages(SchemeGroupVersion, sets...)
+func addKnownFactory(tx *gorm.DB, f Factory) error {
+	return f.AddKnownStorages(tx, SchemeGroupVersion, sets...)
 }
 
 var fb Factory
 
 func init() {
+	tx := &gorm.DB{}
 	fb = NewStorageFactory()
 
 	sets = append(sets, &TestStorage{})
 
-	if err := AddToBuilder(fb); err != nil {
+	if err := AddToBuilder(tx, fb); err != nil {
 		// handle error
 	}
 }
@@ -95,7 +96,7 @@ func (m *TestStorage) FindPk(ctx context.Context, pk any) (runtime.Object, error
 	panic("implement me")
 }
 
-func (m *TestStorage) AutoMigrate() error {
+func (m *TestStorage) AutoMigrate(tx *gorm.DB) error {
 	return nil
 }
 
