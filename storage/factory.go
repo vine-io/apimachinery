@@ -38,11 +38,11 @@ var (
 	ErrStorageAutoMigrate  = fmt.Errorf("auto migrate storage")
 )
 
-type simpleStorageFactory struct {
+type GenericStorageFactory struct {
 	gvkToType map[schema.GroupVersionKind]reflect.Type
 }
 
-func (s *simpleStorageFactory) AddKnownStorages(tx *gorm.DB, gv schema.GroupVersion, sets ...Storage) error {
+func (s *GenericStorageFactory) AddKnownStorages(tx *gorm.DB, gv schema.GroupVersion, sets ...Storage) error {
 
 	for _, storage := range sets {
 		rt := reflect.TypeOf(storage)
@@ -61,7 +61,7 @@ func (s *simpleStorageFactory) AddKnownStorages(tx *gorm.DB, gv schema.GroupVers
 	return nil
 }
 
-func (s *simpleStorageFactory) NewStorage(tx *gorm.DB, in runtime.Object) (Storage, error) {
+func (s *GenericStorageFactory) NewStorage(tx *gorm.DB, in runtime.Object) (Storage, error) {
 	gvk := in.GetObjectKind().GroupVersionKind()
 	rt, exists := s.gvkToType[gvk]
 	if !exists {
@@ -78,12 +78,12 @@ func (s *simpleStorageFactory) NewStorage(tx *gorm.DB, in runtime.Object) (Stora
 	return storage, nil
 }
 
-func (s *simpleStorageFactory) IsExists(gvk schema.GroupVersionKind) bool {
+func (s *GenericStorageFactory) IsExists(gvk schema.GroupVersionKind) bool {
 	_, ok := s.gvkToType[gvk]
 	return ok
 }
 
-func (s *simpleStorageFactory) AllStorages() []Storage {
+func (s *GenericStorageFactory) AllStorages() []Storage {
 	storages := make([]Storage, 0)
 
 	for _, rt := range s.gvkToType {
@@ -95,7 +95,7 @@ func (s *simpleStorageFactory) AllStorages() []Storage {
 }
 
 func NewStorageFactory() Factory {
-	return &simpleStorageFactory{
+	return &GenericStorageFactory{
 		gvkToType: map[schema.GroupVersionKind]reflect.Type{},
 	}
 }
