@@ -8,12 +8,12 @@ require (
 	github.com/gogo/protobuf v1.3.2
 	github.com/json-iterator/go v1.1.12
 	github.com/oxtoacart/bpool v0.0.0-20190530202638-03653db5a59c
-	github.com/vine-io/pkg/inject v0.1.0
-	github.com/vine-io/vine v1.6.7
+	github.com/vine-io/pkg/inject v0.2.0
+	github.com/vine-io/vine v1.6.8
 	go.uber.org/atomic v1.9.0
 	golang.org/x/net v0.5.0
 	google.golang.org/grpc v1.52.0
-	gorm.io/gorm v1.24.5
+	gorm.io/gorm v1.25.0
 )
 
 require (
@@ -25,7 +25,7 @@ require (
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
-	github.com/jinzhu/now v1.1.4 // indirect
+	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/mattn/go-isatty v0.0.16 // indirect
 	github.com/miekg/dns v1.1.50 // indirect
