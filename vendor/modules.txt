@@ -96,7 +96,7 @@ github.com/vine-io/gscheduler/cron
 # github.com/vine-io/pkg/inject v0.2.0
 ## explicit; go 1.18
 github.com/vine-io/pkg/inject
-# github.com/vine-io/vine v1.6.8
+# github.com/vine-io/vine v1.6.9
 ## explicit; go 1.17
 github.com/vine-io/vine/core/broker
 github.com/vine-io/vine/core/client

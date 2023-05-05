@@ -48,6 +48,7 @@ message EntityMeta {
   int64 updateTimestamp = 7;
 
   // 删除时间
+  // +gen:deleteAt
   int64 deletionTimestamp = 8;
 
   string generateName = 9;
@@ -104,6 +105,7 @@ message ObjectMeta {
   int64 updateTimestamp = 7;
 
   // 删除时间
+  // +gen:deleteAt
   int64 deletionTimestamp = 8;
 
   string generateName = 9;
