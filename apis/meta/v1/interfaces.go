@@ -50,6 +50,8 @@ type Meta interface {
 	SetResourceVersion(rv string)
 	GetNamespace() string
 	SetNamespace(ns string)
+	GetDescription() string
+	SetDescription(desc string)
 	GetCreationTimestamp() int64
 	SetCreationTimestamp(t int64)
 	GetUpdateTimestamp() int64
@@ -98,6 +100,14 @@ func (m *ObjectMeta) GetNamespace() string {
 
 func (m *ObjectMeta) SetNamespace(ns string) {
 	m.Namespace = ns
+}
+
+func (m *ObjectMeta) GetDescription() string {
+	return m.Description
+}
+
+func (m *ObjectMeta) SetDescription(desc string) {
+	m.Description = desc
 }
 
 func (m *ObjectMeta) GetCreationTimestamp() int64 {
@@ -192,6 +202,14 @@ func (m *EntityMeta) GetNamespace() string {
 
 func (m *EntityMeta) SetNamespace(ns string) {
 	m.Namespace = ns
+}
+
+func (m *EntityMeta) GetDescription() string {
+	return m.Description
+}
+
+func (m *EntityMeta) SetDescription(desc string) {
+	m.Description = desc
 }
 
 func (m *EntityMeta) GetCreationTimestamp() int64 {
