@@ -150,11 +150,14 @@ func (gv GroupVersion) WithKind(kind string) GroupVersionKind {
 }
 
 // WithTypeKind creates a GroupVersionKind based on the method receiver's GroupVersion and the passed reflect.Type.
-func (gv GroupVersion) WithTypeKind(t reflect.Type) GroupVersionKind {
-	return GroupVersionKind{Group: gv.Group, Version: gv.Version, Kind: t.Name()}
+func (gv GroupVersion) WithTypeKind(rt reflect.Type) GroupVersionKind {
+	if rt.Kind() == reflect.Pointer {
+		rt = rt.Elem()
+	}
+	return GroupVersionKind{Group: gv.Group, Version: gv.Version, Kind: rt.Name()}
 }
 
 // WithAnyKind creates a GroupVersionKind based on the method receiver's GroupVersion and the passed interface.
 func (gv GroupVersion) WithAnyKind(t interface{}) GroupVersionKind {
-	return GroupVersionKind{Group: gv.Group, Version: gv.Version, Kind: reflect.TypeOf(t).Name()}
+	return gv.WithTypeKind(reflect.TypeOf(t))
 }
