@@ -3,7 +3,7 @@ module github.com/vine-io/apimachinery
 go 1.18
 
 require (
-	github.com/evanphx/json-patch/v5 v5.2.0
+	github.com/evanphx/json-patch/v5 v5.5.0
 	github.com/gin-gonic/gin v1.9.1
 	github.com/gogo/protobuf v1.3.2
 	github.com/json-iterator/go v1.1.12
