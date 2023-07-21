@@ -9,7 +9,7 @@ require (
 	github.com/json-iterator/go v1.1.12
 	github.com/oxtoacart/bpool v0.0.0-20190530202638-03653db5a59c
 	github.com/vine-io/pkg/inject v0.2.0
-	github.com/vine-io/vine v1.6.12
+	github.com/vine-io/vine v1.6.13
 	go.uber.org/atomic v1.9.0
 	golang.org/x/net v0.10.0
 	google.golang.org/grpc v1.52.0

@@ -47,6 +47,17 @@ type Storage interface {
 	Delete(ctx context.Context, soft bool) error
 }
 
+type Hook interface {
+	PostGet(ctx context.Context, tx *gorm.DB, target any) error
+	PostList(ctx context.Context, tx *gorm.DB, target any) error
+	PreCreate(ctx context.Context, tx *gorm.DB, target any) error
+	PostCreate(ctx context.Context, tx *gorm.DB, target any) error
+	PreUpdate(ctx context.Context, tx *gorm.DB, target any) error
+	PostUpdate(ctx context.Context, tx *gorm.DB, target any) error
+	PreDelete(ctx context.Context, tx *gorm.DB, target any) error
+	PostDelete(ctx context.Context, tx *gorm.DB, target any) error
+}
+
 type Factory interface {
 	// AddKnownStorages registers Storages
 	AddKnownStorages(tx *gorm.DB, gv schema.GroupVersion, sets ...Storage) error
@@ -60,3 +71,23 @@ type Factory interface {
 	// AllStorages returns all Storages
 	AllStorages() []Storage
 }
+
+type EmptyHook struct{}
+
+func (e *EmptyHook) PreGet(ctx context.Context, tx *gorm.DB, target any) error { return nil }
+
+func (e *EmptyHook) PostGet(ctx context.Context, tx *gorm.DB, target any) error { return nil }
+
+func (e *EmptyHook) PostList(ctx context.Context, tx *gorm.DB, target any) error { return nil }
+
+func (e *EmptyHook) PreCreate(ctx context.Context, tx *gorm.DB, target any) error { return nil }
+
+func (e *EmptyHook) PostCreate(ctx context.Context, tx *gorm.DB, target any) error { return nil }
+
+func (e *EmptyHook) PreUpdate(ctx context.Context, tx *gorm.DB, target any) error { return nil }
+
+func (e *EmptyHook) PostUpdate(ctx context.Context, tx *gorm.DB, target any) error { return nil }
+
+func (e *EmptyHook) PreDelete(ctx context.Context, tx *gorm.DB, target any) error { return nil }
+
+func (e *EmptyHook) PostDelete(ctx context.Context, tx *gorm.DB, target any) error { return nil }
