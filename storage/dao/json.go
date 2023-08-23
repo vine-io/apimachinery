@@ -308,6 +308,7 @@ type JSONQueryExpression struct {
 	contains    bool
 	equals      bool
 	equalsValue interface{}
+	op          EOp
 	extract     bool
 	path        string
 }
@@ -327,6 +328,7 @@ func (jsonQuery *JSONQueryExpression) Extract(path string) *JSONQueryExpression 
 // HasKey returns clause.Expression
 func (jsonQuery *JSONQueryExpression) HasKey(keys ...string) *JSONQueryExpression {
 	jsonQuery.keys = keys
+	jsonQuery.op = EqOp
 	jsonQuery.hasKeys = true
 	return jsonQuery
 }
@@ -351,6 +353,15 @@ func (jsonQuery *JSONQueryExpression) Equals(value interface{}, keys ...string) 
 	jsonQuery.keys = keys
 	jsonQuery.equals = true
 	jsonQuery.equalsValue = value
+	jsonQuery.op = EqOp
+	return jsonQuery
+}
+
+func (jsonQuery *JSONQueryExpression) Op(op EOp, value interface{}, keys ...string) *JSONQueryExpression {
+	jsonQuery.keys = keys
+	jsonQuery.equals = true
+	jsonQuery.equalsValue = value
+	jsonQuery.op = op
 	return jsonQuery
 }
 
@@ -396,7 +407,29 @@ func (jsonQuery *JSONQueryExpression) Build(builder clause.Builder) {
 					builder.WriteQuoted(jsonQuery.column)
 					builder.WriteByte(',')
 					builder.AddVar(stmt, jsonQueryJoin(jsonQuery.keys))
-					builder.WriteString(") = ")
+					builder.WriteString(")")
+
+					switch jsonQuery.op {
+					case EqOp:
+						builder.WriteString(" = ")
+					case NeqOp:
+						builder.WriteString(" <> ")
+					case GtOp:
+						builder.WriteString(" > ")
+					case GteOp:
+						builder.WriteString(" >= ")
+					case LtOp:
+						builder.WriteString(" < ")
+					case LteOp:
+						builder.WriteString(" <= ")
+					case InOp:
+						builder.WriteString(" IN ")
+					case LikeOp:
+						builder.WriteString(" LIKE ")
+					default:
+						builder.WriteString(" = ")
+					}
+
 					if value, ok := jsonQuery.equalsValue.(bool); ok {
 						builder.WriteString(strconv.FormatBool(value))
 					} else {
@@ -435,7 +468,28 @@ func (jsonQuery *JSONQueryExpression) Build(builder clause.Builder) {
 					builder.WriteQuoted(jsonQuery.column)
 					builder.WriteByte(',')
 					builder.AddVar(stmt, jsonQueryJoin(jsonQuery.keys))
-					builder.WriteString(") = ")
+					builder.WriteString(")")
+					switch jsonQuery.op {
+					case EqOp:
+						builder.WriteString(" = ")
+					case NeqOp:
+						builder.WriteString(" <> ")
+					case GtOp:
+						builder.WriteString(" > ")
+					case GteOp:
+						builder.WriteString(" >= ")
+					case LtOp:
+						builder.WriteString(" < ")
+					case LteOp:
+						builder.WriteString(" <= ")
+					case InOp:
+						builder.WriteString(" IN ")
+					case LikeOp:
+						builder.WriteString(" LIKE ")
+					default:
+						builder.WriteString(" = ")
+					}
+
 					if value, ok := jsonQuery.equalsValue.(bool); ok {
 						builder.WriteString(strconv.FormatBool(value))
 					} else {
@@ -475,7 +529,28 @@ func (jsonQuery *JSONQueryExpression) Build(builder clause.Builder) {
 						}
 						stmt.AddVar(builder, key)
 					}
-					builder.WriteString(") = ")
+					builder.WriteString(")")
+
+					switch jsonQuery.op {
+					case EqOp:
+						builder.WriteString(" = ")
+					case NeqOp:
+						builder.WriteString(" <> ")
+					case GtOp:
+						builder.WriteString(" > ")
+					case GteOp:
+						builder.WriteString(" >= ")
+					case LtOp:
+						builder.WriteString(" < ")
+					case LteOp:
+						builder.WriteString(" <= ")
+					case InOp:
+						builder.WriteString(" IN ")
+					case LikeOp:
+						builder.WriteString(" LIKE ")
+					default:
+						builder.WriteString(" = ")
+					}
 
 					if _, ok := jsonQuery.equalsValue.(string); ok {
 						stmt.AddVar(builder, jsonQuery.equalsValue)

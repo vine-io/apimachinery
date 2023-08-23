@@ -210,5 +210,6 @@ func reflectDirect(v reflect.Value) reflect.Value {
 func FieldPatch(v interface{}) map[string]interface{} {
 	outs := make(map[string]interface{})
 	patch(reflect.ValueOf(v), outs, "")
+	delete(outs, "")
 	return outs
 }
