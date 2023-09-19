@@ -180,7 +180,7 @@ func (n *partialDoc) UnmarshalJSON(data []byte) error {
 	if t, err := d.Token(); err != nil {
 		return err
 	} else if t != startObject {
-		return &syntaxError{fmt.Sprintf("unexpected JSON token in document node: %s", t)}
+		return &syntaxError{fmt.Sprintf("unexpected JSON token in document node: %v", t)}
 	}
 	for d.More() {
 		k, err := d.Token()
@@ -454,7 +454,11 @@ func (o Operation) value() *lazyNode {
 
 // ValueInterface decodes the operation value into an interface.
 func (o Operation) ValueInterface() (interface{}, error) {
-	if obj, ok := o["value"]; ok && obj != nil {
+	if obj, ok := o["value"]; ok {
+		if obj == nil {
+			return nil, nil
+		}
+
 		var v interface{}
 
 		err := json.Unmarshal(*obj, &v)
@@ -766,9 +770,9 @@ func ensurePathExists(pd *container, path string, options *ApplyOptions) error {
 				}
 			}
 
-			// Check if the next part is a numeric index.
+			// Check if the next part is a numeric index or "-".
 			// If yes, then create an array, otherwise, create an object.
-			if arrIndex, err = strconv.Atoi(parts[pi+1]); err == nil {
+			if arrIndex, err = strconv.Atoi(parts[pi+1]); err == nil || parts[pi+1] == "-" {
 				if arrIndex < 0 {
 
 					if !options.SupportNegativeIndices {
@@ -816,6 +820,43 @@ func ensurePathExists(pd *container, path string, options *ApplyOptions) error {
 	return nil
 }
 
+func validateOperation(op Operation) error {
+	switch op.Kind() {
+	case "add", "replace":
+		if _, err := op.ValueInterface(); err != nil {
+			return errors.Wrapf(err, "failed to decode 'value'")
+		}
+	case "move", "copy":
+		if _, err := op.From(); err != nil {
+			return errors.Wrapf(err, "failed to decode 'from'")
+		}
+	case "remove", "test":
+	default:
+		return fmt.Errorf("unsupported operation")
+	}
+
+	if _, err := op.Path(); err != nil {
+		return errors.Wrapf(err, "failed to decode 'path'")
+	}
+
+	return nil
+}
+
+func validatePatch(p Patch) error {
+	for _, op := range p {
+		if err := validateOperation(op); err != nil {
+			opData, infoErr := json.Marshal(op)
+			if infoErr != nil {
+				return errors.Wrapf(err, "invalid operation")
+			}
+
+			return errors.Wrapf(err, "invalid operation %s", opData)
+		}
+	}
+
+	return nil
+}
+
 func (p Patch) remove(doc *container, op Operation, options *ApplyOptions) error {
 	path, err := op.Path()
 	if err != nil {
@@ -843,6 +884,29 @@ func (p Patch) replace(doc *container, op Operation, options *ApplyOptions) erro
 	path, err := op.Path()
 	if err != nil {
 		return errors.Wrapf(err, "replace operation failed to decode path")
+	}
+
+	if path == "" {
+		val := op.value()
+
+		if val.which == eRaw {
+			if !val.tryDoc() {
+				if !val.tryAry() {
+					return errors.Wrapf(err, "replace operation value must be object or array")
+				}
+			}
+		}
+
+		switch val.which {
+		case eAry:
+			*doc = &val.ary
+		case eDoc:
+			*doc = val.doc
+		case eRaw:
+			return errors.Wrapf(err, "replace operation hit impossible case")
+		}
+
+		return nil
 	}
 
 	con, key := findObject(doc, path, options)
@@ -911,6 +975,25 @@ func (p Patch) test(doc *container, op Operation, options *ApplyOptions) error {
 		return errors.Wrapf(err, "test operation failed to decode path")
 	}
 
+	if path == "" {
+		var self lazyNode
+
+		switch sv := (*doc).(type) {
+		case *partialDoc:
+			self.doc = sv
+			self.which = eDoc
+		case *partialArray:
+			self.ary = *sv
+			self.which = eAry
+		}
+
+		if self.equal(op.value()) {
+			return nil
+		}
+
+		return errors.Wrapf(ErrTestFailed, "testing value %s failed", path)
+	}
+
 	con, key := findObject(doc, path, options)
 
 	if con == nil {
@@ -923,7 +1006,7 @@ func (p Patch) test(doc *container, op Operation, options *ApplyOptions) error {
 	}
 
 	if val == nil {
-		if op.value().raw == nil {
+		if op.value() == nil || op.value().raw == nil {
 			return nil
 		}
 		return errors.Wrapf(ErrTestFailed, "testing value %s failed", path)
@@ -999,6 +1082,10 @@ func DecodePatch(buf []byte) (Patch, error) {
 	err := json.Unmarshal(buf, &p)
 
 	if err != nil {
+		return nil, err
+	}
+
+	if err := validatePatch(p); err != nil {
 		return nil, err
 	}
 

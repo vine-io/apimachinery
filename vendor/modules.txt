@@ -24,8 +24,8 @@ github.com/bytedance/sonic/utf8
 # github.com/chenzhuoyu/base64x v0.0.0-20221115062448-fe3a3abad311
 ## explicit; go 1.15
 github.com/chenzhuoyu/base64x
-# github.com/evanphx/json-patch/v5 v5.5.0
-## explicit; go 1.12
+# github.com/evanphx/json-patch/v5 v5.7.0
+## explicit; go 1.18
 github.com/evanphx/json-patch/v5
 # github.com/gabriel-vasile/mimetype v1.4.2
 ## explicit; go 1.20
@@ -68,7 +68,7 @@ github.com/goccy/go-json/internal/runtime
 ## explicit; go 1.15
 github.com/gogo/protobuf/proto
 github.com/gogo/protobuf/sortkeys
-# github.com/golang/protobuf v1.5.2
+# github.com/golang/protobuf v1.5.3
 ## explicit; go 1.9
 github.com/golang/protobuf/jsonpb
 github.com/golang/protobuf/proto
@@ -76,7 +76,7 @@ github.com/golang/protobuf/ptypes
 github.com/golang/protobuf/ptypes/any
 github.com/golang/protobuf/ptypes/duration
 github.com/golang/protobuf/ptypes/timestamp
-# github.com/google/uuid v1.3.0
+# github.com/google/uuid v1.3.1
 ## explicit
 github.com/google/uuid
 # github.com/jinzhu/inflection v1.0.0
@@ -97,8 +97,8 @@ github.com/leodido/go-urn
 # github.com/mattn/go-isatty v0.0.19
 ## explicit; go 1.15
 github.com/mattn/go-isatty
-# github.com/miekg/dns v1.1.50
-## explicit; go 1.14
+# github.com/miekg/dns v1.1.56
+## explicit; go 1.19
 github.com/miekg/dns
 # github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd
 ## explicit
@@ -150,7 +150,7 @@ github.com/vine-io/gscheduler/cron
 # github.com/vine-io/pkg/inject v0.2.0
 ## explicit; go 1.18
 github.com/vine-io/pkg/inject
-# github.com/vine-io/vine v1.6.14
+# github.com/vine-io/vine v1.6.15
 ## explicit; go 1.18
 github.com/vine-io/vine/core/broker
 github.com/vine-io/vine/core/client
@@ -177,13 +177,13 @@ go.uber.org/atomic
 # golang.org/x/arch v0.3.0
 ## explicit; go 1.17
 golang.org/x/arch/x86/x86asm
-# golang.org/x/crypto v0.9.0
+# golang.org/x/crypto v0.13.0
 ## explicit; go 1.17
 golang.org/x/crypto/sha3
-# golang.org/x/mod v0.8.0
+# golang.org/x/mod v0.12.0
 ## explicit; go 1.17
 golang.org/x/mod/semver
-# golang.org/x/net v0.10.0
+# golang.org/x/net v0.15.0
 ## explicit; go 1.17
 golang.org/x/net/bpf
 golang.org/x/net/html
@@ -200,14 +200,14 @@ golang.org/x/net/ipv4
 golang.org/x/net/ipv6
 golang.org/x/net/netutil
 golang.org/x/net/trace
-# golang.org/x/sys v0.8.0
+# golang.org/x/sys v0.12.0
 ## explicit; go 1.17
 golang.org/x/sys/cpu
 golang.org/x/sys/execabs
 golang.org/x/sys/internal/unsafeheader
 golang.org/x/sys/unix
 golang.org/x/sys/windows
-# golang.org/x/text v0.9.0
+# golang.org/x/text v0.13.0
 ## explicit; go 1.17
 golang.org/x/text/internal/language
 golang.org/x/text/internal/language/compact
@@ -217,15 +217,17 @@ golang.org/x/text/secure/bidirule
 golang.org/x/text/transform
 golang.org/x/text/unicode/bidi
 golang.org/x/text/unicode/norm
-# golang.org/x/tools v0.6.0
+# golang.org/x/tools v0.13.0
 ## explicit; go 1.18
 golang.org/x/tools/go/gcexportdata
 golang.org/x/tools/go/internal/packagesdriver
 golang.org/x/tools/go/packages
+golang.org/x/tools/go/types/objectpath
 golang.org/x/tools/internal/event
 golang.org/x/tools/internal/event/core
 golang.org/x/tools/internal/event/keys
 golang.org/x/tools/internal/event/label
+golang.org/x/tools/internal/event/tag
 golang.org/x/tools/internal/gcimporter
 golang.org/x/tools/internal/gocommand
 golang.org/x/tools/internal/packagesinternal
@@ -233,17 +235,17 @@ golang.org/x/tools/internal/pkgbits
 golang.org/x/tools/internal/tokeninternal
 golang.org/x/tools/internal/typeparams
 golang.org/x/tools/internal/typesinternal
-# google.golang.org/genproto v0.0.0-20221227171554-f9683d7f8bef
+# google.golang.org/genproto/googleapis/rpc v0.0.0-20230711160842-782d3b101e98
 ## explicit; go 1.19
 google.golang.org/genproto/googleapis/rpc/status
-# google.golang.org/grpc v1.52.0
-## explicit; go 1.17
+# google.golang.org/grpc v1.58.1
+## explicit; go 1.19
 google.golang.org/grpc
 google.golang.org/grpc/attributes
 google.golang.org/grpc/backoff
 google.golang.org/grpc/balancer
 google.golang.org/grpc/balancer/base
-google.golang.org/grpc/balancer/grpclb/grpclbstate
+google.golang.org/grpc/balancer/grpclb/state
 google.golang.org/grpc/balancer/roundrobin
 google.golang.org/grpc/binarylog/grpc_binarylog_v1
 google.golang.org/grpc/channelz
@@ -267,6 +269,7 @@ google.golang.org/grpc/internal/grpclog
 google.golang.org/grpc/internal/grpcrand
 google.golang.org/grpc/internal/grpcsync
 google.golang.org/grpc/internal/grpcutil
+google.golang.org/grpc/internal/idle
 google.golang.org/grpc/internal/metadata
 google.golang.org/grpc/internal/pretty
 google.golang.org/grpc/internal/resolver
@@ -286,7 +289,7 @@ google.golang.org/grpc/serviceconfig
 google.golang.org/grpc/stats
 google.golang.org/grpc/status
 google.golang.org/grpc/tap
-# google.golang.org/protobuf v1.30.0
+# google.golang.org/protobuf v1.31.0
 ## explicit; go 1.11
 google.golang.org/protobuf/encoding/protojson
 google.golang.org/protobuf/encoding/prototext
